@@ -19,7 +19,7 @@
     (synopsis "Rust application")
     (description "Rust application - part of the RSR ecosystem.")
     (home-page "https://github.com/hyperpolymath/file-soup")
-    (license license:agpl3+)))
+    (license (list license:expat license:agpl3+))))
 
 ;; Return package for guix shell
 file_soup

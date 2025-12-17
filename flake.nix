@@ -69,7 +69,7 @@
           meta = with pkgs.lib; {
             description = "Cross-platform file system intelligence tool with plugin architecture";
             homepage = "https://github.com/Hyperpolymath/file-soup";
-            license = with licenses; [ mit asl20 ];
+            license = with licenses; [ mit agpl3Plus ];
             maintainers = [ ];
             platforms = platforms.unix;
           };

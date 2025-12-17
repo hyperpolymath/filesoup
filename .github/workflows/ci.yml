@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT OR AGPL-3.0-or-later
 name: CI
 
 on:
@@ -6,6 +7,8 @@ on:
   pull_request:
     branches: [ main, develop ]
 
+permissions: read-all
+
 env:
   CARGO_TERM_COLOR: always
 
@@ -13,38 +16,23 @@ jobs:
   test:
     name: Test
     runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         rust: [stable, beta]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
       - name: Install Rust
-        uses: actions-rs/toolchain@v1
+        uses: dtolnay/rust-toolchain@e97e2d8cc328f1b50210efc529dca0028893a2d9 # v1
         with:
-          profile: minimal
           toolchain: ${{ matrix.rust }}
-          override: true
           components: rustfmt, clippy
 
-      - name: Cache cargo registry
-        uses: actions/cache@v3
-        with:
-          path: ~/.cargo/registry
-          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
-
-      - name: Cache cargo index
-        uses: actions/cache@v3
-        with:
-          path: ~/.cargo/git
-          key: ${{ runner.os }}-cargo-index-${{ hashFiles('**/Cargo.lock') }}
-
-      - name: Cache cargo build
-        uses: actions/cache@v3
-        with:
-          path: target
-          key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@779680da715d629ac1d338a641029a2f4372abb5 # v2.8.2
 
       - name: Check formatting
         run: cargo fmt --all -- --check
@@ -64,15 +52,15 @@ jobs:
   coverage:
     name: Code Coverage
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
       - name: Install Rust
-        uses: actions-rs/toolchain@v1
+        uses: dtolnay/rust-toolchain@e97e2d8cc328f1b50210efc529dca0028893a2d9 # v1
         with:
-          profile: minimal
           toolchain: stable
-          override: true
 
       - name: Install tarpaulin
         run: cargo install cargo-tarpaulin
@@ -81,7 +69,7 @@ jobs:
         run: cargo tarpaulin --workspace --timeout 120 --out Xml
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v5.5.2
         with:
           files: ./cobertura.xml
           fail_ci_if_error: false
@@ -89,15 +77,15 @@ jobs:
   security-audit:
     name: Security Audit
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
       - name: Install Rust
-        uses: actions-rs/toolchain@v1
+        uses: dtolnay/rust-toolchain@e97e2d8cc328f1b50210efc529dca0028893a2d9 # v1
         with:
-          profile: minimal
           toolchain: stable
-          override: true
 
       - name: Install cargo-audit
         run: cargo install cargo-audit
