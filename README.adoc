@@ -1,0 +1,14 @@
+= filesoup
+// SPDX-License-Identifier: PMPL-1.0-or-later
+:author: Jonathan D.A. Jewell <jonathan.jewell@open.ac.uk>
+
+File management and analysis tools.
+
+== Components
+
+* `fslint-plugin-api/` - FSLint plugin API
+* `fslint-plugin-sdk/` - FSLint plugin SDK
+
+== License
+
+PMPL-1.0-or-later

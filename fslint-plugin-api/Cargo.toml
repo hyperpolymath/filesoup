@@ -1,0 +1,16 @@
+[package]
+name = "fslint-plugin-api"
+version = "0.1.0"
+edition = "2021"
+authors = ["Jonathan D.A. Jewell <hyperpolymath@protonmail.com>"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/hyperpolymath/fslint-plugin-api"
+description = "Plugin API for FSLint - trait definitions and core types for building file scanning plugins"
+keywords = ["plugin", "api", "file-scanning", "lint", "fslint"]
+categories = ["development-tools", "filesystem"]
+readme = "README.md"
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+thiserror = "2.0"
