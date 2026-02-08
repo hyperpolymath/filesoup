@@ -1,0 +1,10 @@
+// SPDX-License-Identifier: PMPL-1.0-or-later
+= filesoup Roadmap
+
+File system analysis and linting tools. Completion: 25%.
+
+== Goals
+* [ ] Complete core functionality
+* [ ] Add test coverage
+* [ ] Write documentation
+* [ ] Stable 1.0 release
