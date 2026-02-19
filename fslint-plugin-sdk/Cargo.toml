@@ -2,19 +2,17 @@
 name = "fslint-plugin-sdk"
 version = "0.1.0"
 edition = "2021"
-authors = ["Jonathan D.A. Jewell <hyperpolymath@protonmail.com>"]
-license = "MIT OR Apache-2.0"
-repository = "https://github.com/hyperpolymath/fslint-plugin-sdk"
+authors = ["Jonathan D.A. Jewell <jonathan.jewell@open.ac.uk>"]
+# PMPL-1.0-or-later preferred; MPL-2.0 required for crates.io (valid SPDX)
+license = "MPL-2.0"
+repository = "https://github.com/hyperpolymath/filesoup"
 description = "SDK with helper utilities for FSLint plugin development"
 keywords = ["plugin", "sdk", "file-scanning", "lint", "fslint"]
 categories = ["development-tools", "filesystem"]
 readme = "README.md"
 
 [dependencies]
-# Once published to crates.io, use:
-# fslint-plugin-api = "0.1"
-# For now, use git:
-fslint-plugin-api = { git = "https://github.com/hyperpolymath/fslint-plugin-api", branch = "main" }
+fslint-plugin-api = { path = "../fslint-plugin-api" }
 anyhow = "1.0"
 chrono = "0.4"
 regex = "1.10"

@@ -2,9 +2,10 @@
 name = "fslint-plugin-api"
 version = "0.1.0"
 edition = "2021"
-authors = ["Jonathan D.A. Jewell <hyperpolymath@protonmail.com>"]
-license = "MIT OR Apache-2.0"
-repository = "https://github.com/hyperpolymath/fslint-plugin-api"
+authors = ["Jonathan D.A. Jewell <jonathan.jewell@open.ac.uk>"]
+# PMPL-1.0-or-later preferred; MPL-2.0 required for crates.io (valid SPDX)
+license = "MPL-2.0"
+repository = "https://github.com/hyperpolymath/filesoup"
 description = "Plugin API for FSLint - trait definitions and core types for building file scanning plugins"
 keywords = ["plugin", "api", "file-scanning", "lint", "fslint"]
 categories = ["development-tools", "filesystem"]

@@ -1,5 +1,41 @@
 # SPDX-License-Identifier: PMPL-1.0-or-later
-@manifest { version: "1.0.0", repo: "hyperpolymath/filesoup", updated: "2026-02-08" }
-@canonical-locations { scm-files: ".machine_readable/", ci-cd: ".github/workflows/" }
-@critical-invariants { rule: "SCM files in .machine_readable/ ONLY" }
-@lifecycle { on-enter: "Read manifest then SCM files", on-exit: "Update STATE.scm" }
+@manifest {
+  version: "1.0.0",
+  repo: "hyperpolymath/filesoup",
+  updated: "2026-02-19"
+}
+
+@identity {
+  name: "FSLint",
+  tagline: "Cross-platform file system intelligence and linting",
+  description: "A file system linter that transforms scattered directory trees into logical, metadata-rich bundles. Makes Linux and Windows filesystems as navigable as macOS packages through tiny, composable plugins."
+}
+
+@canonical-locations {
+  scm-files: ".machine_readable/",
+  ci-cd: ".github/workflows/",
+  plugin-api: "fslint-plugin-api/",
+  plugin-sdk: "fslint-plugin-sdk/",
+  bot-directives: ".bot_directives/",
+  contractiles: "contractiles/"
+}
+
+@components {
+  fslint-plugin-api: "Plugin trait definitions and core types (complete)",
+  fslint-plugin-sdk: "Helper utilities for plugin authors (substantially complete)",
+  fslint-core: "Scanning engine, query parser, caching (planned)",
+  fslint-cli: "CLI entry point and output formatting (planned)",
+  plugins: "Individual plugin crates: git-status, file-age, grouping, bundle-check, etc. (planned)"
+}
+
+@critical-invariants {
+  rule: "SCM files in .machine_readable/ ONLY",
+  rule: "Plugin trait (fslint-plugin-api) is the stable public API — semver required for changes",
+  rule: "No network calls unless explicitly configured (offline-first)",
+  rule: "Author: Jonathan D.A. Jewell (hyperpolymath) <jonathan.jewell@open.ac.uk>"
+}
+
+@lifecycle {
+  on-enter: "Read this manifest, then .machine_readable/STATE.scm for current progress",
+  on-exit: "Update STATE.scm with any changes to component status or completion"
+}

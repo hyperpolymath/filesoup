@@ -1,10 +1,38 @@
 // SPDX-License-Identifier: PMPL-1.0-or-later
-= filesoup Roadmap
+= FSLint Roadmap
+:author: Jonathan D.A. Jewell <jonathan.jewell@open.ac.uk>
+:revdate: 2026-02-19
 
-File system analysis and linting tools. Completion: 25%.
+Overall completion: *25%* — Plugin API and SDK are stable; core engine and CLI
+are next.
 
-== Goals
-* [ ] Complete core functionality
-* [ ] Add test coverage
-* [ ] Write documentation
-* [ ] Stable 1.0 release
+== v0.2.0 — Core Engine
+
+* [x] Plugin trait definitions (`fslint-plugin-api`)
+* [x] Plugin SDK helper utilities (`fslint-plugin-sdk`)
+* [x] Fuzzing targets for API and SDK
+* [ ] Scanning engine with smart caching by `(path, mtime, size)`
+* [ ] Query parser (`name:`, `ext:`, `tag:`, `size_gt:`, `size_lt:`, `newest:`, `<plugin>:<status>`)
+* [ ] CLI with `scan`, `query`, `plugins`, `enable`, `disable`, `config` subcommands
+* [ ] Output formatters: Table (default), JSON, Simple
+* [ ] `.gitignore` support and configurable `max_depth`
+* [ ] Parallel file scanning
+* [ ] Core plugins: `git-status`, `file-age`, `grouping`, `bundle-check`
+
+== v0.3.0 — Extended Intelligence
+
+* [ ] WASM-based plugin runtime for cross-platform extensibility
+* [ ] Plugins: `secret-scanner`, `ai-detection`, `duplicate-finder`
+* [ ] Plugins: `version-detection`, `ocr-status`
+* [ ] macOS bundle collapsing (`.app` as single entity)
+* [ ] Plugin configuration TUI
+
+== v1.0.0 — Stable Release
+
+* [ ] Shell extension integration (Nautilus, Dolphin, Finder, Explorer)
+* [ ] Shadow navigation for symlinks
+* [ ] Virtual filesystem across disks and cloud storage
+* [ ] Malware scanner plugin
+* [ ] Licence detector plugin
+* [ ] Dependency analyser plugin
+* [ ] Code complexity metrics plugin
