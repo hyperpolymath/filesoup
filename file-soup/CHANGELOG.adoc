@@ -1,0 +1,49 @@
+// SPDX-License-Identifier: PMPL-1.0-or-later
+= Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+== [Unreleased]
+
+=== Added
+- Initial release of FSLint
+- Plugin architecture with 8 built-in plugins
+- Query engine with powerful filtering
+- Multiple output formats (table, JSON, simple)
+- Smart caching system
+- Cross-platform support (Linux, macOS, Windows)
+
+== [0.1.0] - 2025-11-22
+
+=== Added
+- Core plugin API and SDK
+- Scanner with directory traversal
+- Configuration system
+- CLI with subcommands: scan, plugins, enable, disable, config, query
+- Git status plugin
+- File age plugin
+- Grouping plugin
+- Version detection plugin
+- OCR status plugin
+- AI detection plugin
+- Duplicate finder plugin
+- Secret scanner plugin
+- CI/CD workflows
+- Comprehensive documentation
+- Example configurations
+
+=== Performance
+- Smart caching by (path, mtime, size)
+- Configurable max-depth limiting
+- .gitignore support for faster scanning
+
+=== Security
+- Secret scanner detects exposed API keys
+- AI detection identifies generated content
+- Duplicate finder prevents data redundancy
+
+[Unreleased]: https://github.com/Hyperpolymath/file-soup/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/Hyperpolymath/file-soup/releases/tag/v0.1.0

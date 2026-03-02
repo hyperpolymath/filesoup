@@ -1,0 +1,17 @@
+[package]
+name = "fslint-plugin-grouping"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Grouping plugin for FSLint - identifies file groups and patterns"
+
+[dependencies]
+fslint-plugin-api = { path = "../../crates/fslint-plugin-api" }
+fslint-plugin-sdk = { path = "../../crates/fslint-plugin-sdk" }
+regex = { workspace = true }
+lazy_static = { workspace = true }
+
+[lib]
+crate-type = ["cdylib", "rlib"]

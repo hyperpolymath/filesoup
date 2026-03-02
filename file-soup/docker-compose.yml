@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  fslint:
+    build: .
+    image: fslint:latest
+    volumes:
+      - ./:/scan:ro  # Mount current directory as read-only
+      - fslint-config:/root/.config/fslint  # Persist configuration
+    command: scan /scan
+
+  fslint-scan:
+    image: fslint:latest
+    volumes:
+      - ./:/scan:ro
+    command: scan /scan --format table
+
+  fslint-security:
+    image: fslint:latest
+    volumes:
+      - ./:/scan:ro
+    command: scan /scan --format table
+    environment:
+      - FSLINT_ENABLE_SECRET_SCANNER=1
+
+volumes:
+  fslint-config:

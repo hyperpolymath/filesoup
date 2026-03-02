@@ -1,0 +1,17 @@
+[package]
+name = "fslint-plugin-ai-detection"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "AI detection plugin for FSLint - detects AI-generated images"
+
+[dependencies]
+fslint-plugin-api = { path = "../../crates/fslint-plugin-api" }
+fslint-plugin-sdk = { path = "../../crates/fslint-plugin-sdk" }
+kamadak-exif = { workspace = true }
+image = { workspace = true }
+
+[lib]
+crate-type = ["cdylib", "rlib"]

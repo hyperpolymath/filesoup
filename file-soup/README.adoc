@@ -1,0 +1,160 @@
+image:https://img.shields.io/badge/License-PMPL--1.0-blue.svg[License: PMPL-1.0,link="https://github.com/hyperpolymath/palimpsest-license"]
+// SPDX-License-Identifier: PMPL-1.0-or-later
+// SPDX-FileCopyrightText: 2025 hyperpolymath
+
+= File System Intelligence & Linting
+:author: Hyperpolymath
+:revnumber: 1.0.0
+:toc: macro
+:toclevels: 2
+:source-highlighter: rouge
+
+FSLint is a high-performance utility designed to provide contextual intelligence about filesystems. It uses a modular plugin architecture to transform loose directory structures into logical, metadata-rich "bundles."
+
+toc::[]
+
+== 🚀 Core Concept
+FSLint addresses "file soup" by applying tiny, composable plugins to files and directories. It identifies their roles, states, and integrity.
+
+* **Contextual Metadata**: Instant insights into git status, file age, and duplicates.
+* **Bundle-fication**: Logic to treat complex directories (like macOS `.app` bundles) as single entities.
+* **Query Engine**: A CLI-first language for filtering files based on plugin results.
+
+== 🔌 Built-in Plugins
+The engine ships with several core plugins for immediate filesystem visibility:
+
+[cols="2,1,4"]
+|===
+| Plugin            | Default | Description
+
+| git-status        | ✅      | Displays branch information and uncommitted changes.
+| file-age          | ✅      | Flags files modified within specific thresholds (e.g., < 7 days).
+| grouping          | ✅      | Categorizes files into types (Media, Dependencies, Source, Config).
+| bundle-check      | ✅      | Verifies if a directory meets the criteria for a cohesive "Package."
+| secret-scanner    | ✅      | Scans for high-entropy strings (API keys, credentials).
+| ai-detection      | ✅      | Identifies AI-generated metadata in images and documents.
+|===
+
+== 🎯 Quick Start
+
+=== Installation
+[source,bash]
+----
+# Build the core and plugins
+cargo build --release
+# Binary available at:
+./target/release/fslint
+----
+
+=== Basic Usage
+[source,bash]
+----
+# Scan current directory with default plugins
+fslint scan
+
+# Output results in JSON for machine consumption
+fslint scan --format json
+
+# Filter the filesystem using the query engine
+fslint query "ext:rs git-status:Modified"
+----
+
+== 🔍 Query Language
+FSLint supports a space-separated filter syntax:
+
+* `name:<string>`: Matches filename.
+* `ext:<string>`: Matches extension.
+* `tag:<string>`: Matches plugin-assigned tags (e.g., `tag:media`).
+* `size_gt:<bytes>`: Files larger than X.
+* `<plugin-name>:<status>`: Match specific plugin output (e.g., `git-status:Modified`).
+
+[source,bash]
+----
+fslint query "name:secret tag:legal size_gt:1024"
+----
+
+== 🏗️ Architecture
+The project is structured into discrete crates to separate the engine from the intelligence logic.
+
+[source,text]
+----
+file-soup/
+├── crates/
+│   ├── fslint-plugin-api/   # Trait definitions for plugin authors
+│   ├── fslint-plugin-sdk/   # Shared utilities (caching, hashing)
+│   ├── fslint-core/         # The scanning engine and query parser
+│   └── fslint-cli/          # Command-line entry point
+└── plugins/
+    ├── git-status/          # Rust-based plugin modules
+    ├── file-age/
+    └── ...
+----
+
+== ⚙️ Configuration
+Configure global behavior and plugin thresholds in `~/.config/fslint/config.toml`.
+
+[source,toml]
+----
+enabled_plugins = ["git-status", "file-age", "grouping"]
+
+[scanner]
+max_depth = 10
+respect_gitignore = true
+
+[plugin_config.file-age]
+threshold_days = 7
+----
+
+== 🎨 Output Formats
+FSLint supports multiple views depending on the environment:
+
+* **Table**: High-visibility summary for terminal use.
+* **JSON**: Full metadata dump for piping into other tools.
+* **Simple**: Path-only output for shell script iteration.
+
+== 🚦 Performance
+* **Smart Caching**: Results cached by `(path, mtime, size)`—unchanged files use cache.
+* **Max Depth**: Default limit of 10 levels prevents deep recursion.
+* **.gitignore Support**: Respects `.gitignore` by default.
+* **Lazy Plugin Execution**: Only enabled plugins run.
+
+Benchmark on a typical project:
+* Initial scan: ~500ms (1000 files)
+* Cached re-scan: ~50ms (90% cache hit rate)
+
+== 🛣️ Roadmap
+
+=== v0.2.0 (Next)
+- WASM plugin runtime support
+- Parallel file scanning
+- Plugin configuration UI
+- macOS bundle collapsing (`.app` as single entity)
+
+=== v0.3.0 (Future)
+- Shell extension integration (Explorer/Finder/Nautilus)
+- Shadow navigation for symlinks
+- Virtual filesystem across disks/cloud
+- Email attachment integration
+
+== 🤝 Contributing
+Contributions welcome! Areas of interest:
+* New Plugins: Implement new file intelligence features.
+* Performance: Optimize scanning and caching.
+* Platform Support: Test and improve Windows/macOS support.
+* Documentation: Improve docs and examples.
+* Testing: Add integration tests.
+
+== 📄 License
+Licensed under either of:
+* Apache License, Version 2.0 (link:LICENSE-APACHE[])
+* MIT license (link:LICENSE-MIT[])
+
+== 🙏 Acknowledgments
+* Inspired by the plugin architecture of Notepad++
+* Built with Rust and love for developer tools
+* Thanks to the Rust community for excellent crates
+
+== 🔗 Links
+* link:https://github.com/Hyperpolymath/file-soup[GitHub Repository]
+* link:https://github.com/Hyperpolymath/file-soup/issues[Issue Tracker]
+* link:https://crates.io/crates/fslint[Crates.io] (Coming soon)

@@ -1,0 +1,31 @@
+# Full FSLint configuration with all plugins enabled
+# Useful for comprehensive file analysis
+
+enabled_plugins = [
+    "git-status",
+    "file-age",
+    "grouping",
+    "version-detection",
+    "ocr-status",
+    "ai-detection",
+    "duplicate-finder",
+    "secret-scanner"
+]
+
+[scanner]
+max_depth = 15
+include_hidden = false
+follow_symlinks = false
+respect_gitignore = true
+max_files = 100000
+
+# Plugin-specific configuration
+
+[plugin_config.file-age]
+threshold_days = "14"
+
+[plugin_config.duplicate-finder]
+min_size = "4096"
+
+[plugin_config.secret-scanner]
+max_file_size = "2097152"

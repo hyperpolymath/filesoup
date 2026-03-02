@@ -1,0 +1,13 @@
+[package]
+name = "fslint-plugin-api"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Plugin API for FSLint - trait definitions and core types"
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }

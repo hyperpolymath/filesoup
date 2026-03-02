@@ -1,0 +1,38 @@
+[package]
+name = "fslint"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Cross-platform file system intelligence tool with plugin architecture"
+readme = "../../README.md"
+keywords = ["cli", "filesystem", "git", "metadata", "plugins"]
+categories = ["command-line-utilities", "filesystem"]
+
+[[bin]]
+name = "fslint"
+path = "src/main.rs"
+
+[dependencies]
+fslint-core = { path = "../fslint-core" }
+fslint-plugin-api = { path = "../fslint-plugin-api" }
+
+# Plugin dependencies
+fslint-plugin-git-status = { path = "../../plugins/git-status" }
+fslint-plugin-file-age = { path = "../../plugins/file-age" }
+fslint-plugin-grouping = { path = "../../plugins/grouping" }
+fslint-plugin-version-detection = { path = "../../plugins/version-detection" }
+fslint-plugin-ocr-status = { path = "../../plugins/ocr-status" }
+fslint-plugin-ai-detection = { path = "../../plugins/ai-detection" }
+fslint-plugin-duplicate-finder = { path = "../../plugins/duplicate-finder" }
+fslint-plugin-secret-scanner = { path = "../../plugins/secret-scanner" }
+
+# CLI dependencies
+clap = { workspace = true }
+colored = { workspace = true }
+anyhow = { workspace = true }
+serde_json = { workspace = true }
+
+[dev-dependencies]
+tempfile = { workspace = true }

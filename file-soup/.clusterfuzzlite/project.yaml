@@ -1,0 +1,6 @@
+homepage: "https://github.com/hyperpolymath/file-soup"
+language: rust
+main_repo: "https://github.com/hyperpolymath/file-soup"
+sanitizers:
+  - address
+  - undefined

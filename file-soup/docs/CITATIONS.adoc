@@ -1,0 +1,36 @@
+= file-soup - Citation Guide
+:toc:
+
+== BibTeX
+
+[source,bibtex]
+----
+@software{file-soup_2025,
+  author = {Polymath, Hyper},
+  title = {file-soup},
+  year = {2025},
+  url = {https://github.com/hyperpolymath/file-soup},
+  license = {AGPL-3.0-or-later}
+}
+----
+
+== Harvard Style
+
+Polymath, H. (2025) _file-soup_ [Computer software]. Available at: https://github.com/hyperpolymath/file-soup
+
+== OSCOLA
+
+Hyper Polymath, 'file-soup' (2025) <https://github.com/hyperpolymath/file-soup>
+
+== MLA
+
+Polymath, Hyper. "file-soup." 2025, github.com/hyperpolymath/file-soup.
+
+== APA 7
+
+Polymath, H. (2025). _file-soup_ [Computer software]. GitHub. https://github.com/hyperpolymath/file-soup
+
+== See Also
+
+* link:../CITATION.cff[CITATION.cff]
+* link:../codemeta.json[codemeta.json]
