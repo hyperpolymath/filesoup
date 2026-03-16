@@ -36,6 +36,6 @@
 }
 
 @lifecycle {
-  on-enter: "Read this manifest, then .machine_readable/STATE.scm for current progress",
-  on-exit: "Update STATE.scm with any changes to component status or completion"
+  on-enter: "Read this manifest, then `.machine_readable/6a2/STATE.a2ml` for current progress",
+  on-exit: "Update .machine_readable/6a2/STATE.a2ml with any changes to component status or completion"
 }
