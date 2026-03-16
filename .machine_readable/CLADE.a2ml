@@ -1,0 +1,26 @@
+# SPDX-License-Identifier: PMPL-1.0-or-later
+# Clade declaration — part of the gv-clade-index registry
+# See: https://github.com/hyperpolymath/gv-clade-index
+
+[identity]
+uuid = "f3198bf9-43a9-53ae-b372-3efefc0d8c48"
+primary-forge = "github"
+primary-owner = "hyperpolymath"
+canonical-name = "filesoup"
+prefixed-name = "dx-filesoup"
+
+[clade]
+primary = "dx"
+secondary = []
+assigned = "2026-03-16"
+rationale = ""
+
+[forges]
+github = "hyperpolymath/filesoup"
+gitlab = "hyperpolymath/filesoup"
+bitbucket = "hyperpolymath/filesoup"
+
+[lineage]
+type = "monorepo"
+parent = "Monorepo — fslint plugin API + SDK"
+born = "2026-03-16"
