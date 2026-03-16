@@ -1,3 +1,4 @@
+#![forbid(unsafe_code)]
 use fslint_plugin_api::{Plugin, PluginContext, PluginError, PluginMetadata, PluginResult, PluginStatus};
 use git2::{Repository, Status, StatusOptions};
 use std::collections::HashMap;

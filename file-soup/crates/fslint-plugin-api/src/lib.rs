@@ -1,3 +1,4 @@
+#![forbid(unsafe_code)]
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 use std::collections::HashMap;

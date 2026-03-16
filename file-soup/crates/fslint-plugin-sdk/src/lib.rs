@@ -1,3 +1,4 @@
+#![forbid(unsafe_code)]
 use fslint_plugin_api::PluginContext;
 use chrono::{DateTime, Utc};
 use regex::Regex;

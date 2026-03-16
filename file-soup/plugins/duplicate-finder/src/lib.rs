@@ -1,3 +1,4 @@
+#![forbid(unsafe_code)]
 use fslint_plugin_api::{Plugin, PluginContext, PluginError, PluginMetadata, PluginResult, PluginStatus};
 use sha2::{Sha256, Digest};
 use std::collections::HashMap;

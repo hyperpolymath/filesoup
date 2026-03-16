@@ -1,3 +1,4 @@
+#![forbid(unsafe_code)]
 mod commands;
 mod output;
 mod query;
