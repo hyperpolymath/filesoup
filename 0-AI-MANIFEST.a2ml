@@ -32,7 +32,7 @@
   rule: "SCM files in .machine_readable/ ONLY",
   rule: "Plugin trait (fslint-plugin-api) is the stable public API — semver required for changes",
   rule: "No network calls unless explicitly configured (offline-first)",
-  rule: "Author: Jonathan D.A. Jewell (hyperpolymath) <jonathan.jewell@open.ac.uk>"
+  rule: "Author: Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>"
 }
 
 @lifecycle {
