@@ -1,5 +1,7 @@
 # Test & Benchmark Requirements
 
+## CRG Grade: C — ACHIEVED 2026-04-04
+
 ## Current State
 - Unit tests: 1 integration test file (file-soup/crates/fslint-cli/tests/integration_test.rs) — count unknown (cannot build)
 - Integration tests: 1
