@@ -1,22 +1,116 @@
 // SPDX-License-Identifier: PMPL-1.0-or-later
+// Copyright (c) 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 = FSLint: File System Intelligence & Linting — Show Me The Receipts
 :toc:
 :icons: font
+:author: Jonathan D.A. Jewell
 
-The README makes claims. This file backs them up.
+The README makes claims. This file backs them up, traces the critical paths,
+and tells a reviewer exactly where to look.
+
+== Claim 1: Plugin Architecture With Composable Linting
 
 [quote, README]
 ____
 Modern operating systems scatter files across deep, opaque hierarchies.
+Configuration lives in one place, data in another, caches in a third. FSLint
+addresses this "file soup" by linting directory structures and surfacing
+contextual metadata about every file and folder it encounters.
 ____
+
+*How it works:*
+The `fslint-plugin-api` crate (in `fslint-plugin-api/src/lib.rs`) defines the
+plugin contract. Every plugin implements the `Plugin` trait:
+
+[source,rust]
+----
+pub trait Plugin: Send + Sync {
+    fn metadata() -> PluginMetadata where Self: Sized;
+    fn check(&self, context: &PluginContext) -> Result<PluginResult, PluginError>;
+    fn initialize(&mut self, config: &HashMap<String, String>) -> Result<(), PluginError> { Ok(()) }
+    fn cleanup(&mut self) -> Result<(), PluginError> { Ok(()) }
+}
+----
+
+The `PluginContext` carries the absolute path, `std::fs::Metadata`, a working
+directory reference, and a `shared_context: HashMap<String, String>` so plugins
+can exchange signals without coupling. `PluginResult` returns a `PluginStatus`
+(`Active` / `Alert` / `Warning` / `Error` / `Skipped`) plus optional message,
+color, tags, and metadata fields. The whole API crate is `#![forbid(unsafe_code)]`.
+
+The `fslint-plugin-sdk` crate provides helpers plugin authors need in practice:
+path helpers, file-age/size formatting, and regex-based pattern matching for
+common file categories (media, source, config, dependencies). It ships with unit
+tests and a fuzz harness.
+
+*Honest caveat:*
+`fslint-core` (the scanning engine) and `fslint-cli` are both marked *planned*
+in the README. The two implemented crates (`fslint-plugin-api`, `fslint-plugin-sdk`)
+are the plugin contract layer only — no scanner wires them together yet. All
+`fslint scan` CLI examples in the README are illustrative, not functional today.
+
+== Claim 2: Intelligent Bundlification and Query Engine
+
+[quote, README]
+____
+Bundle-fication: Logic to identify and treat complex multi-file directories as
+cohesive single entities (like macOS `.app` bundles), so users see one logical
+"thing" rather than a tree of fragments.
+____
+
+*How it works:*
+The `bundle-check` plugin (planned in `plugins/bundle-check/`) will implement a
+heuristic rule set to classify a directory as a "Package" — checking for
+canonical marker files (e.g., `Cargo.toml`, `package.json`, `*.app/Contents`)
+and applying tag `bundle:true` to the `PluginResult`. The query engine (in the
+planned `fslint-core` crate) will then collapse directories marked `bundle:true`
+into a single logical entry in CLI output, hiding their contents unless
+`--expand-bundles` is passed.
+
+The query language is space-separated key:value filters:
+`fslint query "ext:rs git-status:Modified"` — the parser will live in
+`fslint-core/src/query.rs` and produce a predicate tree evaluated against
+cached `PluginResult` sets.
+
+The caching strategy (also in planned `fslint-core`) keys on `(path, mtime, size)`,
+so unchanged files reuse results on re-scan and only dirty files re-invoke plugins.
+
+*Honest caveat:*
+Bundle collapsing and the query engine exist only as design in the README. The
+`fslint-plugin-sdk` has the `category_tag` helper that will feed bundle detection,
+but no detection logic is wired yet.
+
+== Dogfooded Across The Account
+
+[cols="2,3,1"]
+|===
+| Repo / System | How FSLint is used | Status
+
+| `hypatia` (CI scanner) | Planned: fslint secret-scanner plugin to replace ad-hoc grep-based secret detection | Planned
+| `robot-vacuum-cleaner` | Planned: feed fslint duplicate-finder output into the vacuum's dedup pass | Planned
+| `gossamer` | Potential consumer: window-grouped file views could use bundle-check plugin tags | Design stage
+| Developer workstation | Daily driver intent: run `fslint scan` on repos before committing | Aspirational
+|===
 
 == File Map
 
-[cols="1,2"]
+[cols="1,3"]
 |===
 | Path | What's There
 
-| `test(s)/` | Test suite
+| `fslint-plugin-api/src/lib.rs` | **Critical path.** `Plugin` trait, `PluginContext`, `PluginResult`, `PluginStatus`, `PluginError`, `PluginMetadata` — the entire plugin contract
+| `fslint-plugin-sdk/src/lib.rs` | Helper utilities: path helpers, file-age/size formatters, regex category patterns, context helpers
+| `fslint-plugin-sdk/fuzz/` | Fuzz harness for SDK helpers (cargo-fuzz)
+| `file-soup/` | Top-level Rust workspace `Cargo.toml` tying the crates together; also holds `crates/`, `plugins/` (both planned), `fuzz/`, `scripts/`
+| `file-soup/crates/` | Future home of `fslint-core` and `fslint-cli` (directories exist, content planned)
+| `file-soup/plugins/` | Future home of individual plugin crates (directories exist, content planned)
+| `file-soup/docs/` | Architecture notes and plugin authoring guide
+| `file-soup/examples/` | Code examples for plugin authors
+| `PROOF-NEEDS.md` | Formal verification backlog for this repo
+| `Justfile` | Build recipes: `just build`, `just test`, `just fuzz`, `just lint`
+| `flake.nix` / `guix.scm` | Reproducible environment definitions
+| `contractiles/` | Contractile trust/dust/intend check files
+| `.machine_readable/` | A2ML state, meta, ecosystem, agentic manifests
 |===
 
 == Questions?
