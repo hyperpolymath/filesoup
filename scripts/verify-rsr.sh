@@ -88,7 +88,7 @@ echo ""
 
 echo "🔧 RSR Category 6: Build System"
 check "Cargo.toml exists" "[ -f Cargo.toml ]"
-check "justfile exists" "[ -f justfile ]"
+check "justfile exists" "[ -f Justfile ]"
 check "Makefile exists (alternative)" "[ -f Makefile ]"
 check "flake.nix exists (Nix builds)" "[ -f flake.nix ]"
 check "CI/CD exists (.github/workflows/)" "[ -d .github/workflows ] && [ -f .github/workflows/ci.yml ]"
