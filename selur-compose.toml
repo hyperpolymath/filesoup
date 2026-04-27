@@ -1,0 +1,26 @@
+# SPDX-License-Identifier: PMPL-1.0-or-later
+# Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+#
+# Stapeln service definition for file-soup
+#
+# Usage:
+#   podman-compose -f selur-compose.toml up -d
+#   just stack-up
+
+[project]
+name = "file-soup"
+
+[services.fslint]
+build = { context = ".", dockerfile = "Containerfile" }
+image = "fslint:latest"
+restart = "unless-stopped"
+networks = ["default"]
+volumes = [
+  "./:/scan:ro",
+  "fslint-config:/root/.config/fslint",
+]
+command = "scan /scan"
+healthcheck = { test = "exit 0", interval = "30s", timeout = "5s", retries = 3 }
+
+[volumes]
+fslint-config = {}
