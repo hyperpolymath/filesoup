@@ -67,7 +67,7 @@ lazy_static = "1.4"
 
 # Testing
 proptest = "1.4"
-tempfile = "3.8"
+tempfile = "3.27"
 criterion = "0.5"
 
 [profile.release]
