@@ -59,7 +59,7 @@ image = "0.24"
 kamadak-exif = "0.6"
 
 # PDF operations
-pdf = "0.8"
+pdf = "0.10"
 
 # Regex for secret scanning
 regex = "1.10"
