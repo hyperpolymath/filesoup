@@ -1,3 +1,11 @@
+# Retained per standards#102 rule 3 (KEEP+DEP). guix.scm uses
+# cargo-build-system with no declared inputs; this flake's devShell is
+# the SOLE source of the full dev environment: rust-overlay
+# rustToolchain (stable + rust-src/rustfmt/clippy), pkg-config, just,
+# cargo-watch, cargo-audit, cargo-outdated, cargo-license, openssl,
+# git — and the `full` shell additionally provides tokei, ripgrep, fd,
+# bat, exa, cargo-flamegraph, cargo-criterion. Remove only after a
+# real-inputs guix.scm or sealed container covers this set.
 {
   description = "FSLint - Cross-platform file system intelligence tool";
 
