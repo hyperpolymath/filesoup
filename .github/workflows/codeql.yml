@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: PMPL-1.0
+# SPDX-License-Identifier: MPL-2.0
 name: CodeQL Security Analysis
 
 on:
@@ -7,7 +7,7 @@ on:
   pull_request:
     branches: [main, master]
   schedule:
-    - cron: '0 6 * * 1'
+    - cron: '0 6 1 * *'   # monthly 1st 06:00 UTC
 
 # Estate guardrail: cancel superseded runs so re-pushes / rebased PR
 # updates do not pile up queued runs against the shared account-wide
@@ -38,12 +38,12 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@9e0d7b8d25671d64c341c19c0152d693099fb5ba # v3
+        uses: github/codeql-action/init@7211b7c8077ea37d8641b6271f6a365a22a5fbfa # v3
         with:
           languages: ${{ matrix.language }}
           build-mode: ${{ matrix.build-mode }}
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@9e0d7b8d25671d64c341c19c0152d693099fb5ba # v3
+        uses: github/codeql-action/analyze@7211b7c8077ea37d8641b6271f6a365a22a5fbfa # v3
         with:
           category: "/language:${{ matrix.language }}"
