@@ -1,238 +1,247 @@
+= FSLint: File System Intelligence & Linting
 // SPDX-License-Identifier: MPL-2.0
-// Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
-= FSLint
+:author: Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+:revnumber: 0.1.0
+:revdate: 2026-02-19
+:toc: macro
+:toclevels: 2
+:source-highlighter: rouge
 
-*Cross-platform file system intelligence tool with a Notepad++-style plugin architecture*
+FSLint is a high-performance, cross-platform file system linter designed to
+make filesystems intelligible and navigable for real people. It applies tiny,
+composable plugins to files and directories, transforming scattered directory
+trees into logical, metadata-rich bundles — bringing the cohesion of macOS
+`.app` packages to Linux and Windows.
 
-FSLint provides contextual metadata about files through tiny, composable plugins that can be enabled/disabled individually. Get instant insights about git status, file age, duplicates, AI-generated content, secrets, and more.
+toc::[]
 
-[![License: Triple](https://img.shields.io/badge/license-MPL--2.0-blue.svg)](LICENSE-MIT)
-[![Rust](https://img.shields.io/badge/rust-1.70%2B-orange.svg)](https://www.rust-lang.org/)
-[![RSR Compliant](https://img.shields.io/badge/RSR-Gold%20Tier-gold.svg)](docs/RSR_COMPLIANCE.md)
-[![TPCF](https://img.shields.io/badge/TPCF-Perimeter%203%20Open-green.svg)](docs/TPCF.md)
-[![RFC 9116](https://img.shields.io/badge/RFC%209116-security.txt-blue.svg)](.well-known/security.txt)
+== Core Concept
 
-== 🚀 Features
+Modern operating systems scatter files across deep, opaque hierarchies.
+Configuration lives in one place, data in another, caches in a third. FSLint
+addresses this "file soup" by linting directory structures and surfacing
+contextual metadata about every file and folder it encounters.
 
-- *Plugin Architecture*: Tiny, composable plugins inspired by Notepad++
-- *8 Built-in Plugins*: Git status, file age, grouping, version detection, and more
-- *Smart Caching*: Intelligent caching by (path, mtime, size) for fast re-scans
-- *Query Engine*: Powerful filtering with `name:`, `ext:`, `newest:` syntax
-- *Multiple Output Formats*: Table, JSON, or simple text
-- *Offline-First*: Works completely air-gapped, no network calls
-- *Cross-platform*: Works on Linux, macOS, and Windows
-- *Performance Focused*: Configurable max-depth, .gitignore support
+*Contextual metadata*:: Instant insights into git status, file age, duplicates,
+AI-generated content, exposed secrets, and more.
 
-== 📦 Installation
+*Bundle-fication*:: Logic to identify and treat complex multi-file directories
+as cohesive single entities (like macOS `.app` bundles), so users see one
+logical "thing" rather than a tree of fragments.
 
-=== From Source
+*Query engine*:: A CLI-first filtering language for slicing through results
+by filename, extension, plugin tags, size thresholds, and plugin status.
 
-```bash
-git clone https://github.com/Hyperpolymath/file-soup.git
+== Built-in Plugins
+
+FSLint ships with a set of core plugins for immediate filesystem visibility.
+Each can be enabled or disabled individually.
+
+[cols="2,1,4"]
+|===
+| Plugin | Default | Description
+
+| `git-status`
+| ✅
+| Displays branch information and uncommitted changes for git-tracked files.
+
+| `file-age`
+| ✅
+| Flags files modified within configurable thresholds (default: 7 days).
+
+| `grouping`
+| ✅
+| Categorises files into types: Media, Dependencies, Source, Config, etc.
+
+| `bundle-check`
+| ✅
+| Verifies whether a directory meets the criteria for a cohesive "Package."
+
+| `version-detection`
+| ❌
+| Finds versioned files (`report_v1`, `file_final`, `backup_2`).
+
+| `ocr-status`
+| ❌
+| Detects PDF text layers and OCR state.
+
+| `ai-detection`
+| ❌
+| Identifies AI-generated content via EXIF metadata and heuristics.
+
+| `duplicate-finder`
+| ❌
+| Hash-based duplicate detection across directories and volumes.
+
+| `secret-scanner`
+| ❌
+| Scans for exposed API keys, credentials, and high-entropy strings.
+|===
+
+== Quick Start
+
+=== Installation
+
+[source,bash]
+----
+git clone https://github.com/hyperpolymath/file-soup.git
 cd file-soup
 cargo build --release
-```
+# Binary at ./target/release/fslint
+----
 
-The binary will be at `./target/release/fslint`
+=== Basic Usage
 
-=== Using Cargo
-
-```bash
-cargo install fslint
-```
-
-== 🎯 Quick Start
-
-```bash
-= Scan current directory
+[source,bash]
+----
+# Scan current directory with default plugins
 fslint scan
 
-= Scan with JSON output
+# Output results as JSON
 fslint scan --format json
 
-= Query for specific files
-fslint query "name:config ext:toml"
-
-= Find newest version of a file
-fslint query "name:report newest:true"
-
-= List all plugins
-fslint plugins
-
-= Enable/disable plugins
-fslint enable secret-scanner
-fslint disable grouping
-```
-
-== 🔌 Built-in Plugins
-
-| Plugin | Default | Description |
-|--------|---------|-------------|
-| *git-status* | ✅ | Shows git repo status and branch info |
-| *file-age* | ✅ | Highlights recently modified files (< 7 days) |
-| *grouping* | ✅ | Categorizes files (node_modules, media, etc.) |
-| *version-detection* | ❌ | Finds versioned files (file_v1, file_final) |
-| *ocr-status* | ❌ | Detects PDF text layers |
-| *ai-detection* | ❌ | Identifies AI-generated images via EXIF |
-| *duplicate-finder* | ❌ | Hash-based duplicate detection |
-| *secret-scanner* | ❌ | Finds exposed API keys and secrets |
-
-== 📖 Usage Examples
-
-=== Basic Scanning
-
-```bash
-= Scan current directory with table output
-fslint scan
-
-= Scan specific directory
+# Scan a specific directory
 fslint scan /path/to/project
 
-= Use simple output format
+# Simple output format (path + tags only)
 fslint scan --format simple
+----
 
-= Export to JSON
-fslint scan --format json > results.json
-```
+=== Querying
 
-=== Query Examples
+[source,bash]
+----
+# Find all Rust source files with uncommitted changes
+fslint query "ext:rs git-status:Modified"
 
-```bash
-= Find all TypeScript files
-fslint query "ext:ts"
+# Find the newest config file
+fslint query "name:config ext:toml newest:true"
 
-= Find modified files
-fslint query "git-status:Modified"
+# Find large files tagged as media
+fslint query "tag:media size_gt:1048576"
 
-= Find recent large files
-fslint query "size_gt:1048576 tag:age"
-
-= Find AI-generated images
-fslint enable ai-detection
-fslint query "tag:ai"
-
-= Find secrets in code
+# Find exposed secrets
 fslint enable secret-scanner
-fslint scan --format table
-```
+fslint query "secret-scanner:Alert"
+----
 
 === Plugin Management
 
-```bash
-= List all plugins and their status
+[source,bash]
+----
+# List all plugins and their status
 fslint plugins
 
-= Enable a plugin
-fslint enable version-detection
+# Enable a disabled plugin
+fslint enable ai-detection
 
-= Disable a plugin
+# Disable a plugin
 fslint disable grouping
 
-= View current configuration
+# View current configuration
 fslint config
-```
+----
 
-== ⚙️ Configuration
+== Query Language
 
-FSLint stores configuration at `~/.config/fslint/config.toml`
+FSLint supports a space-separated filter syntax. Combine filters freely:
 
-```toml
-enabled_plugins = ["git-status", "file-age", "grouping"]
+[cols="2,3,3"]
+|===
+| Filter | Example | Description
 
-[scanner]
-max_depth = 10
-include_hidden = false
-follow_symlinks = false
-respect_gitignore = true
+| `name:<string>`
+| `name:config`
+| Match filename substring.
 
-[plugin_config.file-age]
-threshold_days = "7"
+| `ext:<string>`
+| `ext:rs`
+| Match file extension.
 
-[plugin_config.duplicate-finder]
-min_size = "1024"
+| `newest:true`
+| `newest:true`
+| Return only the most recent match.
 
-[plugin_config.secret-scanner]
-max_file_size = "1048576"
-```
+| `tag:<string>`
+| `tag:media`
+| Match plugin-assigned tags.
 
-== 🏗️ Architecture
+| `size_gt:<bytes>`
+| `size_gt:1048576`
+| Files larger than threshold.
 
-```
+| `size_lt:<bytes>`
+| `size_lt:1024`
+| Files smaller than threshold.
+
+| `<plugin>:<status>`
+| `git-status:Modified`
+| Match specific plugin result.
+|===
+
+[source,bash]
+----
+fslint query "name:report ext:pdf newest:true"
+----
+
+== Architecture
+
+The project is structured as a Rust workspace with discrete crates separating
+the plugin interface from the scanning engine and CLI.
+
+[source,text]
+----
 file-soup/
-├── crates/
-│   ├── fslint-plugin-api/   # Plugin trait definitions
-│   ├── fslint-plugin-sdk/   # Helper utilities
-│   ├── fslint-core/         # Scanner, loader, config
-│   └── fslint-cli/          # CLI interface
-└── plugins/
+├── fslint-plugin-api/       # Plugin trait definitions and core types
+├── fslint-plugin-sdk/       # Helper utilities for plugin authors
+├── fslint-core/             # Scanning engine, query parser, caching  (planned)
+├── fslint-cli/              # CLI entry point and output formatting   (planned)
+└── plugins/                 # Individual plugin crate modules         (planned)
     ├── git-status/
     ├── file-age/
     ├── grouping/
-    └── ... (8 total)
-```
+    ├── bundle-check/
+    └── ...
+----
 
-=== Plugin Development
+=== Current Implementation Status
 
-Create a new plugin in 3 steps:
+* **fslint-plugin-api** — Complete. Defines the `Plugin` trait, `PluginContext`,
+  `PluginResult`, `PluginStatus`, `PluginError`, and `PluginMetadata` types.
+  Includes builder methods and unit tests.
 
-1. *Create plugin directory*:
-```bash
-mkdir plugins/my-plugin
-cd plugins/my-plugin
-```
+* **fslint-plugin-sdk** — Substantially complete. Provides path helpers, file
+  metadata utilities (age, size formatting), regex-based pattern matching for
+  common file categories, and context helpers. Includes tests and fuzzing.
 
-2. *Add Cargo.toml*:
-```toml
-[package]
-name = "fslint-plugin-my-plugin"
-version = "0.1.0"
+* **fslint-core** — Planned. Will contain the scanning engine with smart caching
+  (keyed on path, mtime, size), `.gitignore` support, configurable max-depth,
+  and the query parser.
 
-[dependencies]
-fslint-plugin-api = { path = "../../crates/fslint-plugin-api" }
-fslint-plugin-sdk = { path = "../../crates/fslint-plugin-sdk" }
-```
+* **fslint-cli** — Planned. Will provide the `fslint` command with `scan`,
+  `query`, `plugins`, `enable`, `disable`, and `config` subcommands. Multiple
+  output formats: Table (default), JSON, Simple.
 
-3. *Implement Plugin trait* in `src/lib.rs`:
-```rust
-use fslint_plugin_api::{Plugin, PluginContext, PluginResult, PluginMetadata};
+* **plugins/** — Planned. Each plugin as its own crate, depending on
+  `fslint-plugin-api` and optionally `fslint-plugin-sdk`.
 
-pub struct MyPlugin;
-
-impl Plugin for MyPlugin {
-    fn metadata() -> PluginMetadata {
-        PluginMetadata {
-            name: "my-plugin".into(),
-            version: "0.1.0".into(),
-            description: "My awesome plugin".into(),
-            author: Some("Your Name".into()),
-            enabled_by_default: false,
-        }
-    }
-
-    fn check(&self, context: &PluginContext) -> Result<PluginResult, PluginError> {
-        // Your plugin logic here
-        Ok(PluginResult::active("my-plugin", "Found something!"))
-    }
-}
-```
-
-4. *Register plugin* in `crates/fslint-cli/src/commands.rs`
-
-See existing plugins for complete examples.
-
-== 🎨 Output Formats
+== Output Formats
 
 === Table Format (Default)
-```
-File                                               Git             Age             Group                Other
-------------------------------------------------------------------------------------------------------------------------
-src/main.rs                                        Modified        Today           -                    -
-package.json                                       Clean           This week       -                    -
-node_modules/react/index.js                        -               -               Node Dependencies    -
-```
+
+[source,text]
+----
+File                               Git        Age        Group              Other
+─────────────────────────────────────────────────────────────────────────────────
+src/main.rs                        Modified   Today      -                  -
+package.json                       Clean      This week  -                  -
+node_modules/react/index.js        -          -          Node Dependencies  -
+----
 
 === JSON Format
-```json
+
+[source,json]
+----
 [
   {
     "path": "/project/src/main.rs",
@@ -247,101 +256,131 @@ node_modules/react/index.js                        -               -            
     ]
   }
 ]
-```
+----
 
 === Simple Format
-```
+
+[source,text]
+----
 src/main.rs [Modified, Today]
 package.json [Clean, This week]
 node_modules/react/index.js [Node Dependencies]
-```
+----
 
-== 🔍 Query Language
+== Configuration
 
-FSLint supports a powerful query syntax:
+FSLint stores configuration at `~/.config/fslint/config.toml`:
 
-| Filter | Example | Description |
-|--------|---------|-------------|
-| `name:` | `name:config` | Match filename |
-| `ext:` | `ext:rs` | Match extension |
-| `newest:true` | `newest:true` | Return newest file only |
-| `tag:` | `tag:media` | Match plugin tag |
-| `size_gt:` | `size_gt:1024` | Files larger than size |
-| `size_lt:` | `size_lt:1048576` | Files smaller than size |
-| `<plugin>:` | `git-status:Modified` | Match plugin result |
+[source,toml]
+----
+enabled_plugins = ["git-status", "file-age", "grouping", "bundle-check"]
 
-Combine filters with spaces:
-```bash
-fslint query "name:report ext:pdf newest:true"
-```
+[scanner]
+max_depth = 10
+include_hidden = false
+follow_symlinks = false
+respect_gitignore = true
 
-== 🚦 Performance
+[plugin_config.file-age]
+threshold_days = 7
 
-- *Smart Caching*: Results cached by (path, mtime, size) - unchanged files use cache
-- *Max Depth*: Default limit of 10 levels prevents deep recursion
-- *.gitignore Support*: Respects .gitignore by default
-- *Lazy Plugin Execution*: Only enabled plugins run
-- *Parallel Scanning*: (Planned for v0.2.0)
+[plugin_config.duplicate-finder]
+min_size = 1024
 
-Benchmark on a typical project:
-```
-Initial scan:    ~500ms (1000 files)
-Cached re-scan:  ~50ms  (90% cache hit rate)
-```
+[plugin_config.secret-scanner]
+max_file_size = 1048576
+----
 
-== 🛣️ Roadmap
+== Performance
 
-=== v0.2.0 (Next)
-- [ ] WASM plugin runtime support
-- [ ] Parallel file scanning
-- [ ] Plugin configuration UI
-- [ ] macOS bundle collapsing (`.app` as single entity)
+* *Smart caching*: Results cached by `(path, mtime, size)` — unchanged files
+  reuse cache on re-scan.
+* *Max depth*: Default limit of 10 levels prevents deep recursion into
+  `node_modules` and similar pits.
+* *.gitignore support*: Respects `.gitignore` by default, skipping irrelevant
+  files.
+* *Lazy execution*: Only enabled plugins run.
 
-=== v0.3.0 (Future)
-- [ ] Shell extension integration (Explorer/Finder/Nautilus)
-- [ ] Shadow navigation for symlinks
-- [ ] Virtual filesystem across disks/cloud
-- [ ] Email attachment integration
-- [ ] Focus mode filters
+== Plugin Development
 
-=== Planned Plugins
-- [ ] Malware scanner
-- [ ] License detector
-- [ ] Dependency analyzer
-- [ ] Code complexity metrics
-- [ ] Image metadata extractor
+Create a new plugin in three steps:
 
-== 🤝 Contributing
+. Create the plugin crate:
++
+[source,bash]
+----
+mkdir plugins/my-plugin
+cd plugins/my-plugin
+cargo init --lib
+----
 
-Contributions welcome! Areas of interest:
+. Add dependencies to `Cargo.toml`:
++
+[source,toml]
+----
+[dependencies]
+fslint-plugin-api = { path = "../../fslint-plugin-api" }
+fslint-plugin-sdk = { path = "../../fslint-plugin-sdk" }
+----
 
-1. *New Plugins*: Implement new file intelligence features
-2. *Performance*: Optimize scanning and caching
-3. *Platform Support*: Test and improve Windows/macOS support
-4. *Documentation*: Improve docs and examples
-5. *Testing*: Add integration tests
+. Implement the `Plugin` trait in `src/lib.rs`:
++
+[source,rust]
+----
+use fslint_plugin_api::{Plugin, PluginContext, PluginResult, PluginMetadata, PluginError};
 
-== 📄 License
+pub struct MyPlugin;
 
-Licensed under either of:
+impl Plugin for MyPlugin {
+    fn metadata(&self) -> PluginMetadata {
+        PluginMetadata {
+            name: "my-plugin".into(),
+            version: "0.1.0".into(),
+            description: "My custom file intelligence plugin".into(),
+            author: Some("Your Name".into()),
+            enabled_by_default: false,
+        }
+    }
 
-- Apache License, Version 2.0 ([LICENSE-APACHE](LICENSE-APACHE))
-- MIT license ([LICENSE-MIT](LICENSE-MIT))
+    fn check(&self, context: &PluginContext) -> Result<PluginResult, PluginError> {
+        // Your plugin logic here
+        Ok(PluginResult::active("my-plugin", "Found something interesting"))
+    }
+}
+----
 
-at your option.
+See existing plugins for complete examples.
 
-== 🙏 Acknowledgments
+== Roadmap
 
-- Inspired by the plugin architecture of Notepad++
-- Built with Rust and love for developer tools
-- Thanks to the Rust community for excellent crates
+=== v0.2.0 — Core Engine
 
-== 🔗 Links
+* [ ] Scanning engine with caching (`fslint-core`)
+* [ ] CLI with `scan`, `query`, `plugins` subcommands (`fslint-cli`)
+* [ ] Parallel file scanning
+* [ ] Core plugins: `git-status`, `file-age`, `grouping`, `bundle-check`
 
-- [GitHub Repository](https://github.com/Hyperpolymath/file-soup)
-- [Issue Tracker](https://github.com/Hyperpolymath/file-soup/issues)
-- [Crates.io](https://crates.io/crates/fslint) (Coming soon)
+=== v0.3.0 — Extended Intelligence
 
----
+* [ ] WASM-based plugin runtime for cross-platform extensions
+* [ ] Plugins: `secret-scanner`, `ai-detection`, `duplicate-finder`
+* [ ] macOS bundle collapsing (`.app` as single entity)
+* [ ] Plugin configuration via TUI
 
-*Made with ❤️ by the FSLint team*
+=== v1.0.0 — Stable
+
+* [ ] Shell extension integration (Nautilus, Dolphin, Finder, Explorer)
+* [ ] Shadow navigation for symlinks
+* [ ] Virtual filesystem across disks and cloud storage
+* [ ] Malware scanner, licence detector, dependency analyser plugins
+
+== Licence
+
+MPL-2.0 (Palimpsest Licence)
+
+Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+
+== Links
+
+* https://github.com/hyperpolymath/file-soup[GitHub Repository]
+* https://github.com/hyperpolymath/file-soup/issues[Issue Tracker]

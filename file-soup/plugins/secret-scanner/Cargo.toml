@@ -1,0 +1,17 @@
+[package]
+name = "fslint-plugin-secret-scanner"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Secret scanner plugin for FSLint - detects API keys and secrets"
+
+[dependencies]
+fslint-plugin-api = { path = "../../crates/fslint-plugin-api" }
+fslint-plugin-sdk = { path = "../../crates/fslint-plugin-sdk" }
+regex = { workspace = true }
+lazy_static = { workspace = true }
+
+[lib]
+crate-type = ["cdylib", "rlib"]

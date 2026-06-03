@@ -1,0 +1,10 @@
+# Minimal FSLint configuration
+# Only essential plugins enabled
+
+enabled_plugins = ["git-status", "file-age"]
+
+[scanner]
+max_depth = 10
+include_hidden = false
+follow_symlinks = false
+respect_gitignore = true

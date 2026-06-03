@@ -1,0 +1,17 @@
+# Security-focused FSLint configuration
+# Optimized for finding secrets and sensitive data
+
+enabled_plugins = [
+    "secret-scanner",
+    "duplicate-finder",
+    "grouping"
+]
+
+[scanner]
+max_depth = 20
+include_hidden = true  # Check hidden files for secrets
+follow_symlinks = false
+respect_gitignore = false  # Scan everything
+
+[plugin_config.secret-scanner]
+max_file_size = "5242880"  # 5MB

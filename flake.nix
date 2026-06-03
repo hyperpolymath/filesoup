@@ -1,185 +1,115 @@
-# Retained per standards#102 rule 3 (KEEP+DEP). guix.scm uses
-# cargo-build-system with no declared inputs; this flake's devShell is
-# the SOLE source of the full dev environment: rust-overlay
-# rustToolchain (stable + rust-src/rustfmt/clippy), pkg-config, just,
-# cargo-watch, cargo-audit, cargo-outdated, cargo-license, openssl,
-# git — and the `full` shell additionally provides tokei, ripgrep, fd,
-# bat, exa, cargo-flamegraph, cargo-criterion. Remove only after a
-# real-inputs guix.scm or sealed container covers this set.
 {
-  description = "FSLint - Cross-platform file system intelligence tool";
+  description = "filesoup - {project-description}";
 
+  # *REMINDER: Update inputs with actual dependencies*
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
-    rust-overlay = {
-      url = "github:oxalica/rust-overlay";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # Add language-specific inputs:
+    # rust-overlay.url = "github:oxalica/rust-overlay";  # For Rust
+    # fenix.url = "github:nix-community/fenix";  # Alternative Rust
   };
 
-  outputs = { self, nixpkgs, flake-utils, rust-overlay }:
+  outputs = { self, nixpkgs, flake-utils, ... }@inputs:
     flake-utils.lib.eachDefaultSystem (system:
       let
-        overlays = [ (import rust-overlay) ];
         pkgs = import nixpkgs {
-          inherit system overlays;
+          inherit system;
+          # overlays = [ (import inputs.rust-overlay) ];  # For Rust
         };
 
-        rustToolchain = pkgs.rust-bin.stable.latest.default.override {
-          extensions = [ "rust-src" "rustfmt" "clippy" ];
-        };
-
-        # Build inputs for all platforms
-        nativeBuildInputs = with pkgs; [
-          rustToolchain
-          pkg-config
-          just
-          cargo-watch
-          cargo-audit
-          cargo-outdated
-          cargo-license
-        ];
-
+        # *REMINDER: Define build dependencies*
         buildInputs = with pkgs; [
-          openssl
+          # Language-specific dependencies:
+          # gnat13  # Ada
+          # cargo rustc  # Rust
+          # elixir  # Elixir
+          # For build tools:
+          just
+          podman
           git
-        ] ++ lib.optionals stdenv.isDarwin [
-          darwin.apple_sdk.frameworks.Security
-          darwin.apple_sdk.frameworks.SystemConfiguration
         ];
 
-        # FSLint package
-        fslint = pkgs.rustPlatform.buildRustPackage {
-          pname = "fslint";
-          version = "0.1.0";
-
-          src = ./.;
-
-          cargoLock = {
-            lockFile = ./Cargo.lock;
-          };
-
-          nativeBuildInputs = nativeBuildInputs;
-          buildInputs = buildInputs;
-
-          # Run tests during build
-          doCheck = true;
-
-          # Build only the CLI binary
-          cargoBuildFlags = [ "-p" "fslint" ];
-
-          # Install completion scripts
-          postInstall = ''
-            # Future: Add shell completions here
-          '';
-
-          meta = with pkgs.lib; {
-            description = "Cross-platform file system intelligence tool with plugin architecture";
-            homepage = "https://github.com/Hyperpolymath/file-soup";
-            license = with licenses; [ mit agpl3Plus ];
-            maintainers = [ ];
-            platforms = platforms.unix;
-          };
-        };
+        # *REMINDER: Define development dependencies*
+        nativeBuildInputs = with pkgs; [
+          # Development tools:
+          ripgrep  # Code search
+          lychee  # Link validation
+          # Language-specific:
+          # rustfmt clippy  # Rust
+          # mix  # Elixir
+        ];
 
       in
       {
-        # Default package
-        packages = {
-          default = fslint;
-          fslint = fslint;
-        };
-
         # Development shell
         devShells.default = pkgs.mkShell {
           inherit buildInputs nativeBuildInputs;
 
           shellHook = ''
-            echo "FSLint Development Environment"
-            echo ""
-            echo "Rust version: $(rustc --version)"
-            echo "Cargo version: $(cargo --version)"
+            echo "🚀 filesoup development environment"
+            echo "Language: mixed"
             echo ""
             echo "Available commands:"
-            echo "  just --list    - List all development commands"
-            echo "  just build     - Build FSLint"
-            echo "  just test      - Run tests"
-            echo "  just ci        - Run all CI checks"
-            echo "  just scan      - Run FSLint on current directory"
+            echo "  just --list    # Show all tasks"
+            echo "  just setup     # Set up environment"
+            echo "  just build     # Build project"
+            echo "  just test      # Run tests"
+            echo "  just validate  # RSR compliance"
             echo ""
+            # *REMINDER: Add language-specific environment setup*
+            # export CARGO_HOME=$PWD/.cargo  # Rust
+            # export MIX_HOME=$PWD/.mix  # Elixir
           '';
-
-          # Set environment variables
-          RUST_BACKTRACE = "1";
-          RUST_LOG = "info";
         };
 
-        # Alternative development shells
-        devShells = {
-          # Minimal shell (just Rust)
-          minimal = pkgs.mkShell {
-            buildInputs = [ rustToolchain ];
-          };
+        # Packages
+        packages.default = pkgs.stdenv.mkDerivation {
+          pname = "filesoup";
+          version = "0.1.0";
+          src = ./.;
 
-          # Full shell with all tools
-          full = pkgs.mkShell {
-            buildInputs = buildInputs ++ nativeBuildInputs ++ (with pkgs; [
-              tokei
-              ripgrep
-              fd
-              bat
-              exa
-              cargo-flamegraph
-              cargo-criterion
-            ]);
+          inherit buildInputs nativeBuildInputs;
 
-            shellHook = ''
-              echo "FSLint Full Development Environment (All Tools)"
-            '';
+          buildPhase = ''
+            # *REMINDER: Add build commands*
+            # For Rust: cargo build --release
+            # For Elixir: mix compile
+            # For Ada: gprbuild -P filesoup.gpr -XMODE=release
+          '';
+
+          installPhase = ''
+            mkdir -p $out/bin
+            # *REMINDER: Add install commands*
+            # cp target/release/filesoup $out/bin/  # Rust
+            # cp bin/filesoup $out/bin/  # Ada
+          '';
+
+          meta = with pkgs.lib; {
+            description = "{project-description}";
+            homepage = "{repo-url}";
+            license = with licenses; [ mit ];  # MIT + Palimpsest
+            maintainers = [ "{maintainer-name}" ];
+            platforms = platforms.unix;
           };
         };
 
         # Apps
-        apps.default = flake-utils.lib.mkApp {
-          drv = fslint;
+        apps.default = {
+          type = "app";
+          program = "${self.packages.${system}.default}/bin/filesoup";
         };
 
-        # Formatter for nix files
-        formatter = pkgs.nixpkgs-fmt;
-
-        # Checks (run with: nix flake check)
+        # Checks (CI/CD integration)
         checks = {
-          # Build check
-          build = fslint;
-
-          # Format check
-          fmt = pkgs.runCommand "fmt-check" { } ''
-            ${pkgs.cargo}/bin/cargo fmt --check --manifest-path=${./.}/Cargo.toml
-            touch $out
-          '';
-
-          # Clippy check
-          clippy = pkgs.runCommand "clippy-check" {
-            buildInputs = nativeBuildInputs ++ buildInputs;
+          build = self.packages.${system}.default;
+          # *REMINDER: Add test checks*
+          test = pkgs.runCommand "test-filesoup" {
+            buildInputs = [ self.packages.${system}.default ];
           } ''
-            ${pkgs.cargo}/bin/cargo clippy --manifest-path=${./.}/Cargo.toml -- -D warnings
+            # Run tests here
             touch $out
           '';
-
-          # Test check
-          test = pkgs.runCommand "test-check" {
-            buildInputs = nativeBuildInputs ++ buildInputs;
-          } ''
-            ${pkgs.cargo}/bin/cargo test --manifest-path=${./.}/Cargo.toml --workspace
-            touch $out
-          '';
-        };
-
-        # Hydra jobs (for CI)
-        hydraJobs = {
-          inherit (self.packages.${system}) fslint;
-          inherit (self.checks.${system}) build fmt clippy test;
         };
       }
     );

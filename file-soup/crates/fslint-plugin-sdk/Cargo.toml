@@ -1,0 +1,14 @@
+[package]
+name = "fslint-plugin-sdk"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "SDK with helper utilities for FSLint plugin development"
+
+[dependencies]
+fslint-plugin-api = { path = "../fslint-plugin-api" }
+anyhow = { workspace = true }
+chrono = { workspace = true }
+regex = { workspace = true }

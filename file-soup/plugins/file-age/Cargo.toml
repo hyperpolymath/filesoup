@@ -1,0 +1,16 @@
+[package]
+name = "fslint-plugin-file-age"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "File age plugin for FSLint - highlights recent modifications"
+
+[dependencies]
+fslint-plugin-api = { path = "../../crates/fslint-plugin-api" }
+fslint-plugin-sdk = { path = "../../crates/fslint-plugin-sdk" }
+chrono = { workspace = true }
+
+[lib]
+crate-type = ["cdylib", "rlib"]

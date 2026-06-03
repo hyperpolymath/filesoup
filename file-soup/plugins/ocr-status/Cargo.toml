@@ -1,0 +1,20 @@
+[package]
+name = "fslint-plugin-ocr-status"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "OCR status plugin for FSLint - detects PDF text layers"
+
+[dependencies]
+fslint-plugin-api = { path = "../../crates/fslint-plugin-api" }
+fslint-plugin-sdk = { path = "../../crates/fslint-plugin-sdk" }
+pdf = { workspace = true, optional = true }
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[features]
+default = []
+pdf-support = ["pdf"]

@@ -1,0 +1,18 @@
+# Development-focused FSLint configuration
+# Optimized for active development workflows
+
+enabled_plugins = [
+    "git-status",
+    "file-age",
+    "grouping",
+    "version-detection"
+]
+
+[scanner]
+max_depth = 10
+include_hidden = false
+follow_symlinks = false
+respect_gitignore = true
+
+[plugin_config.file-age]
+threshold_days = "7"

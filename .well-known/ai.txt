@@ -1,67 +1,18 @@
-# AI Training Policy for FSLint
-# This file declares policies for AI training on FSLint source code and documentation.
-# See: https://site.spawning.ai/ai-txt
+# SPDX-License-Identifier: MPL-2.0
+# ai.txt - AI interaction policy
+# See: https://site.spawning.ai/spawning-ai-txt
 
-# Default policy
 User-Agent: *
-Disallow: /
+Disallow-Training: yes
+Disallow-Summarization: no
+Disallow-Generation: yes
 
-# Explicit allow for specific purposes
-User-Agent: GPTBot
-Allow: /docs/
-Allow: /examples/
-Allow: /README.md
-Disallow: /
-
-User-Agent: ChatGPT-User
-Allow: /docs/
-Allow: /examples/
-Allow: /README.md
-Disallow: /
-
-# AI Training Policy
-# FSLint is dual-licensed under MIT and Apache-2.0.
+# This project's code is licensed under MPL-2.0.
+# AI agents may read and analyze this code for assisting contributors.
+# AI agents must NOT use this code for model training without explicit consent.
+# AI agents must preserve Emotional Lineage per PMPL Section 3.
 #
-# PERMITTED USES:
-# - Code assistance and autocomplete for FSLint contributors
-# - Documentation Q&A for FSLint users
-# - Educational purposes (learning Rust, plugin architecture)
-# - Research on software engineering practices
-#
-# PROHIBITED USES:
-# - Training proprietary models without attribution
-# - Generating competing products
-# - Removing license headers or attribution
-# - Training on security vulnerabilities to create attack tools
-#
-# ATTRIBUTION REQUIRED:
-# If you use FSLint code/docs for AI training:
-# 1. Credit "FSLint Contributors" in model card/documentation
-# 2. Link to: https://github.com/Hyperpolymath/file-soup
-# 3. Preserve license information
-# 4. Disclose FSLint as training source if asked
-#
-# OPTIONAL BUT APPRECIATED:
-# - Notify us: ai-training@fslint.org
-# - Share improvements back to FSLint
-# - Cite FSLint in research papers
-#
-# CONTACT:
-# For permission to use beyond these terms: ai-training@fslint.org
-#
-# This policy may be updated. Check Git history for changes.
-# Last updated: 2025-11-22
-
-# Open Source AI Commitment
-# We support:
-# - Open source AI models (Llama, Mistral, etc.)
-# - Transparent training data practices
-# - Attribution and fair use
-# - Developer autonomy
-#
-# We oppose:
-# - Undisclosed training on open source code
-# - License washing through AI
-# - Exploitative data harvesting
-
-# Crawl-Delay: 1
+# For AI agent integration instructions, see:
+#   0-AI-MANIFEST.a2ml (universal AI entry point)
+#   AI.a2ml (Claude-specific instructions)
+#   .machine_readable/ (structured project state)

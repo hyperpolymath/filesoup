@@ -1,0 +1,141 @@
+= fslint-plugin-sdk
+image:https://img.shields.io/badge/License-PMPL--1.0-blue.svg[License: PMPL-1.0,link="https://github.com/hyperpolymath/palimpsest-license"]
+
+
+
+
+image:https://img.shields.io/badge/Philosophy-Palimpsest-indigo.svg[Palimpsest,link="https://github.com/hyperpolymath/palimpsest-license"]
+
+
+:toc:
+:toc-title: Contents
+:sectnums:
+
+image:https://img.shields.io/badge/Rust-1.70+-orange.svg[Rust 1.70+]
+image:https://img.shields.io/badge/RSR-Tier%201-gold.svg[RSR Tier 1]
+
+**SDK with helper utilities for FSLint plugin development.**
+
+== Overview
+
+This crate provides helper utilities for building plugins for https://github.com/hyperpolymath/file-soup[FSLint]. It re-exports `fslint-plugin-api` and adds useful helpers for common plugin operations.
+
+=== Features
+
+* **Path utilities** - Extension extraction, hidden file detection
+* **Metadata helpers** - File age, size formatting
+* **Common patterns** - Predefined patterns for node_modules, images, etc.
+* **Context helpers** - Simplified access to plugin context
+* **Re-exports** - Includes all of `fslint-plugin-api`
+
+== Installation
+
+Add to your `Cargo.toml`:
+
+[source,toml]
+----
+[dependencies]
+fslint-plugin-sdk = "0.1"
+----
+
+== Modules
+
+=== `path` - Path Helpers
+
+[source,rust]
+----
+use fslint_plugin_sdk::path;
+
+let ext = path::extension(Path::new("file.txt"));  // Some("txt")
+let hidden = path::is_hidden(Path::new(".hidden")); // true
+----
+
+=== `metadata` - File Metadata Helpers
+
+[source,rust]
+----
+use fslint_plugin_sdk::metadata;
+
+let age = metadata::age_in_days(modified_time);
+let size = metadata::format_size(1024 * 1024);  // "1.00 MB"
+----
+
+=== `patterns` - Common File Patterns
+
+[source,rust]
+----
+use fslint_plugin_sdk::patterns::{Patterns, matches};
+
+if matches(path, &Patterns::node_modules()) {
+    // Skip node_modules
+}
+
+if matches(path, &Patterns::image_files()) {
+    // Handle images
+}
+----
+
+=== `context` - Plugin Context Helpers
+
+[source,rust]
+----
+use fslint_plugin_sdk::context;
+
+let rel_path = context::relative_path(&ctx);
+let size = context::file_size(&ctx);
+----
+
+== Example Plugin
+
+[source,rust]
+----
+use fslint_plugin_sdk::prelude::*;  // Re-exports fslint-plugin-api
+use fslint_plugin_sdk::{path, patterns};
+
+pub struct LargeFilePlugin;
+
+impl Plugin for LargeFilePlugin {
+    fn metadata() -> PluginMetadata {
+        PluginMetadata {
+            name: "large-files".into(),
+            version: "0.1.0".into(),
+            description: "Detect large files".into(),
+            author: Some("hyperpolymath".into()),
+            enabled_by_default: true,
+        }
+    }
+
+    fn check(&self, ctx: &PluginContext) -> Result<PluginResult, PluginError> {
+        // Skip hidden files
+        if path::is_hidden(&ctx.path) {
+            return Ok(PluginResult::skipped("large-files"));
+        }
+
+        // Check file size
+        let size = ctx.metadata.len();
+        if size > 10 * 1024 * 1024 {  // 10MB
+            return Ok(PluginResult::warning(
+                "large-files",
+                &format!("Large file: {}", metadata::format_size(size))
+            ));
+        }
+
+        Ok(PluginResult::inactive("large-files"))
+    }
+}
+----
+
+== Related Crates
+
+* https://github.com/hyperpolymath/fslint-plugin-api[fslint-plugin-api] - Core plugin trait and types
+* https://github.com/hyperpolymath/file-soup[file-soup] - The main FSLint application
+
+== License
+
+PMPL-1.0 OR PMPL-1.0
+
+See link:LICENSE-PMPL-1.0[LICENSE-PMPL-1.0] for details.
+
+== Contributing
+
+Contributions welcome! Please read link:CONTRIBUTING.md[CONTRIBUTING.md] first.

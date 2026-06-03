@@ -1,0 +1,17 @@
+[package]
+name = "fslint-plugin-git-status"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Git status plugin for FSLint"
+
+[dependencies]
+fslint-plugin-api = { path = "../../crates/fslint-plugin-api" }
+fslint-plugin-sdk = { path = "../../crates/fslint-plugin-sdk" }
+git2 = { workspace = true }
+anyhow = { workspace = true }
+
+[lib]
+crate-type = ["cdylib", "rlib"]

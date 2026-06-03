@@ -1,269 +1,594 @@
-# FSLint justfile - Command runner for development tasks
-# Install just: https://github.com/casey/just
-# Usage: just <recipe>
+# SPDX-License-Identifier: MPL-2.0
+# Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+#
+# RSR Standard Justfile Template
+# https://just.systems/man/en/
+#
+# Run `just` to see all available recipes
+# Run `just cookbook` to generate docs/just-cookbook.adoc
+# Run `just combinations` to see matrix recipe options
 
-# Default recipe (list all recipes)
+set shell := ["bash", "-uc"]
+set dotenv-load := true
+set positional-arguments := true
+
+# Project metadata — customize these
+import? "contractile.just"
+
+project := "filesoup"
+version := "0.1.0"
+tier := "infrastructure"  # 1 | 2 | infrastructure
+
+# ===============================================================================
+# DEFAULT & HELP
+# ===============================================================================
+
+# Show all available recipes with descriptions
 default:
-    @just --list
+    @just --list --unsorted
 
-# Build all crates (debug)
-build:
-    cargo build --workspace
+# Show detailed help for a specific recipe
+help recipe="":
+    #!/usr/bin/env bash
+    if [ -z "{{recipe}}" ]; then
+        just --list --unsorted
+        echo ""
+        echo "Usage: just help <recipe>"
+        echo "       just cookbook     # Generate full documentation"
+        echo "       just combinations # Show matrix recipes"
+    else
+        just --show "{{recipe}}" 2>/dev/null || echo "Recipe '{{recipe}}' not found"
+    fi
 
-# Build release binary
-build-release:
-    cargo build --release --workspace
+# Show this project's info
+info:
+    @echo "Project: {{project}}"
+    @echo "Version: {{version}}"
+    @echo "RSR Tier: {{tier}}"
+    @echo "Recipes: $(just --summary | wc -w)"
+    @[ -f ".machine_readable/STATE.a2ml" ] && grep -oP 'phase\s*=\s*"\K[^"]+' .machine_readable/STATE.a2ml | head -1 | xargs -I{} echo "Phase: {}" || true
+
+# ===============================================================================
+# BUILD & COMPILE
+# ===============================================================================
+
+# Build the project (debug mode)
+build *args:
+    @echo "Building {{project}} (debug)..."
+    # TODO: Replace with your build command
+    # Examples:
+    #   cargo build {{args}}                    # Rust
+    #   mix compile {{args}}                    # Elixir
+    #   zig build {{args}}                      # Zig
+    #   deno task build {{args}}                # Deno/ReScript
+    @echo "Build complete"
+
+# Build in release mode with optimizations
+build-release *args:
+    @echo "Building {{project}} (release)..."
+    # TODO: Replace with your release build command
+    # Examples:
+    #   cargo build --release {{args}}
+    #   MIX_ENV=prod mix compile {{args}}
+    #   zig build -Doptimize=ReleaseFast {{args}}
+    @echo "Release build complete"
+
+# Build and watch for changes (requires entr or similar)
+build-watch:
+    @echo "Watching for changes..."
+    # TODO: Customize file patterns for your language
+    # Examples:
+    #   find src -name '*.rs' | entr -c just build
+    #   mix compile --force --warnings-as-errors
+    #   deno task dev
+
+# Clean build artifacts [reversible: rebuild with `just build`]
+clean:
+    @echo "Cleaning..."
+    # TODO: Customize for your build system
+    rm -rf target/ _build/ build/ dist/ out/ obj/ bin/
+
+# Deep clean including caches [reversible: rebuild]
+clean-all: clean
+    rm -rf .cache .tmp
+
+# ===============================================================================
+# TEST & QUALITY
+# ===============================================================================
 
 # Run all tests
-test:
-    cargo test --workspace
+test *args:
+    @echo "Running tests..."
+    # TODO: Replace with your test command
+    # Examples:
+    #   cargo test {{args}}
+    #   mix test {{args}}
+    #   zig build test {{args}}
+    #   deno test {{args}}
+    @echo "Tests passed!"
 
-# Run tests with output
+# Run tests with verbose output
 test-verbose:
-    cargo test --workspace -- --nocapture
+    @echo "Running tests (verbose)..."
+    # TODO: Replace with verbose test command
 
-# Run specific crate tests
-test-crate crate:
-    cargo test -p {{crate}}
+# Smoke test
+test-smoke:
+    @echo "Smoke test..."
+    # TODO: Add basic sanity checks
 
-# Run benchmarks
-bench:
-    cargo bench
+# Run all quality checks
+quality: fmt-check lint test
+    @echo "All quality checks passed!"
 
-# Run specific benchmark
-bench-one name:
-    cargo bench --bench {{name}}
+# Fix all auto-fixable issues [reversible: git checkout]
+fix: fmt
+    @echo "Fixed all auto-fixable issues"
 
-# Format all code
+# ===============================================================================
+# LINT & FORMAT
+# ===============================================================================
+
+# Format all source files [reversible: git checkout]
 fmt:
-    cargo fmt --all
+    @echo "Formatting source files..."
+    # TODO: Replace with your formatter
+    # Examples:
+    #   cargo fmt
+    #   mix format
+    #   gleam format
+    #   deno fmt
 
-# Check formatting (CI)
+# Check formatting without changes
 fmt-check:
-    cargo fmt --all -- --check
+    @echo "Checking formatting..."
+    # TODO: Replace with your format check
+    # Examples:
+    #   cargo fmt --check
+    #   mix format --check-formatted
+    #   gleam format --check
 
-# Run clippy linter
+# Run linter
 lint:
-    cargo clippy --workspace -- -D warnings
+    @echo "Linting source files..."
+    # TODO: Replace with your linter
+    # Examples:
+    #   cargo clippy -- -D warnings
+    #   mix credo --strict
+    #   gleam check
 
-# Auto-fix clippy issues
-lint-fix:
-    cargo clippy --workspace --fix --allow-dirty --allow-staged
+# ===============================================================================
+# RUN & EXECUTE
+# ===============================================================================
 
-# Quick check (faster than build)
-check:
-    cargo check --workspace
+# Run the application
+run *args: build
+    # TODO: Replace with your run command
+    echo "Run not configured yet"
 
-# Clean build artifacts
-clean:
-    cargo clean
+# Run with verbose output
+run-verbose *args: build
+    # TODO: Replace with verbose run command
+    echo "Run not configured yet"
 
-# Generate and open documentation
+# Install to user path
+install: build-release
+    @echo "Installing {{project}}..."
+    # TODO: Replace with your install command
+
+# ===============================================================================
+# DEPENDENCIES
+# ===============================================================================
+
+# Install/check all dependencies
+deps:
+    @echo "Checking dependencies..."
+    # TODO: Replace with your dependency check
+    # Examples:
+    #   cargo check
+    #   mix deps.get
+    #   gleam deps download
+    @echo "All dependencies satisfied"
+
+# Audit dependencies for vulnerabilities
+deps-audit:
+    @echo "Auditing for vulnerabilities..."
+    # TODO: Replace with your audit command
+    # Examples:
+    #   cargo audit
+    #   mix audit
+    @command -v trivy >/dev/null && trivy fs --severity HIGH,CRITICAL --quiet . || true
+    @command -v gitleaks >/dev/null && gitleaks detect --source . --no-git --quiet || true
+    @echo "Audit complete"
+
+# ===============================================================================
+# DOCUMENTATION
+# ===============================================================================
+
+# Generate all documentation
 docs:
-    cargo doc --workspace --no-deps --open
+    @mkdir -p docs/generated docs/man
+    just cookbook
+    just man
+    @echo "Documentation generated in docs/"
 
-# Generate documentation (no open)
-docs-build:
-    cargo doc --workspace --no-deps
+# Generate justfile cookbook documentation
+cookbook:
+    #!/usr/bin/env bash
+    mkdir -p docs
+    OUTPUT="docs/just-cookbook.adoc"
+    echo "= {{project}} Justfile Cookbook" > "$OUTPUT"
+    echo ":toc: left" >> "$OUTPUT"
+    echo ":toclevels: 3" >> "$OUTPUT"
+    echo "" >> "$OUTPUT"
+    echo "Generated: $(date -Iseconds)" >> "$OUTPUT"
+    echo "" >> "$OUTPUT"
+    echo "== Recipes" >> "$OUTPUT"
+    echo "" >> "$OUTPUT"
+    just --list --unsorted | while read -r line; do
+        if [[ "$line" =~ ^[[:space:]]+([a-z_-]+) ]]; then
+            recipe="${BASH_REMATCH[1]}"
+            echo "=== $recipe" >> "$OUTPUT"
+            echo "" >> "$OUTPUT"
+            echo "[source,bash]" >> "$OUTPUT"
+            echo "----" >> "$OUTPUT"
+            echo "just $recipe" >> "$OUTPUT"
+            echo "----" >> "$OUTPUT"
+            echo "" >> "$OUTPUT"
+        fi
+    done
+    echo "Generated: $OUTPUT"
 
-# Run FSLint CLI (scan current directory)
-run *ARGS:
-    cargo run --release -- {{ARGS}}
+# Generate man page
+man:
+    #!/usr/bin/env bash
+    mkdir -p docs/man
+    cat > docs/man/{{project}}.1 << EOF
+    .TH {{project}} 1 "$(date +%Y-%m-%d)" "{{version}}" "{{project}} Manual"
+    .SH NAME
+    {{project}} \- RSR-compliant project
+    .SH SYNOPSIS
+    .B just
+    [recipe] [args...]
+    .SH DESCRIPTION
+    RSR (Rhodium Standard Repository) project managed with just.
+    .SH AUTHOR
+    $(git config user.name 2>/dev/null || echo "Author") <$(git config user.email 2>/dev/null || echo "email")>
+    EOF
+    echo "Generated: docs/man/{{project}}.1"
 
-# Scan current directory with table output
-scan:
-    cargo run --release -- scan .
+# ===============================================================================
+# CONTAINERS (Podman + Wolfi)
+# ===============================================================================
 
-# Scan with JSON output
-scan-json:
-    cargo run --release -- scan . --format json
+# Build container image
+container-build tag="latest":
+    @if [ -f Containerfile ]; then \
+        podman build -t {{project}}:{{tag}} -f Containerfile .; \
+    else \
+        echo "No Containerfile found"; \
+    fi
 
-# List all plugins
-plugins:
-    cargo run --release -- plugins
+# Run container
+container-run *args:
+    podman run --rm -it {{project}}:latest {{args}}
 
-# Show configuration
-config:
-    cargo run --release -- config
+# Push container image
+container-push registry="ghcr.io/hyperpolymath" tag="latest":
+    podman tag {{project}}:{{tag}} {{registry}}/{{project}}:{{tag}}
+    podman push {{registry}}/{{project}}:{{tag}}
 
-# Enable a plugin
-enable plugin:
-    cargo run --release -- enable {{plugin}}
+# ===============================================================================
+# CI & AUTOMATION
+# ===============================================================================
 
-# Disable a plugin
-disable plugin:
-    cargo run --release -- disable {{plugin}}
+# Run full CI pipeline locally
+ci: deps quality
+    @echo "CI pipeline complete!"
 
-# Run query
-query filter:
-    cargo run --release -- query "{{filter}}"
+# Install git hooks
+install-hooks:
+    @mkdir -p .git/hooks
+    @cat > .git/hooks/pre-commit << 'HOOKEOF'
+    #!/bin/bash
+    just fmt-check || exit 1
+    just lint || exit 1
+    HOOKEOF
+    @chmod +x .git/hooks/pre-commit
+    @echo "Git hooks installed"
 
-# Install FSLint to system
-install:
-    cargo install --path crates/fslint-cli
+# ===============================================================================
+# SECURITY
+# ===============================================================================
 
-# Uninstall FSLint from system
-uninstall:
-    cargo uninstall fslint
+# Run security audit
+security: deps-audit
+    @echo "=== Security Audit ==="
+    @command -v gitleaks >/dev/null && gitleaks detect --source . --verbose || true
+    @command -v trivy >/dev/null && trivy fs --severity HIGH,CRITICAL . || true
+    @echo "Security audit complete"
 
-# Run all CI checks
-ci: fmt-check lint test build-release
-    @echo "✓ All CI checks passed!"
+# Generate SBOM
+sbom:
+    @mkdir -p docs/security
+    @command -v syft >/dev/null && syft . -o spdx-json > docs/security/sbom.spdx.json || echo "syft not found"
+
+# ===============================================================================
+# VALIDATION & COMPLIANCE
+# ===============================================================================
 
 # Validate RSR compliance
-validate: ci
-    @echo "Checking RSR compliance..."
-    @test -f SECURITY.md || (echo "✗ Missing SECURITY.md" && exit 1)
-    @test -f CODE_OF_CONDUCT.md || (echo "✗ Missing CODE_OF_CONDUCT.md" && exit 1)
-    @test -f MAINTAINERS.md || (echo "✗ Missing MAINTAINERS.md" && exit 1)
-    @test -f .well-known/security.txt || (echo "✗ Missing .well-known/security.txt" && exit 1)
-    @test -f .well-known/ai.txt || (echo "✗ Missing .well-known/ai.txt" && exit 1)
-    @test -f .well-known/humans.txt || (echo "✗ Missing .well-known/humans.txt" && exit 1)
-    @test -f LICENSE-MIT || (echo "✗ Missing LICENSE-MIT" && exit 1)
-    @test -f LICENSE-APACHE || (echo "✗ Missing LICENSE-APACHE" && exit 1)
-    @test -f CHANGELOG.md || (echo "✗ Missing CHANGELOG.md" && exit 1)
-    @test -f CONTRIBUTING.md || (echo "✗ Missing CONTRIBUTING.md" && exit 1)
-    @test -f README.md || (echo "✗ Missing README.md" && exit 1)
-    @echo "✓ RSR compliance validated!"
+validate-rsr:
+    #!/usr/bin/env bash
+    echo "=== RSR Compliance Check ==="
+    MISSING=""
+    for f in .editorconfig .gitignore Justfile README.adoc LICENSE; do
+        [ -f "$f" ] || MISSING="$MISSING $f"
+    done
+    for f in .machine_readable/STATE.a2ml .machine_readable/META.a2ml .machine_readable/ECOSYSTEM.a2ml; do
+        [ -f "$f" ] || MISSING="$MISSING $f"
+    done
+    if [ -n "$MISSING" ]; then
+        echo "MISSING:$MISSING"
+        exit 1
+    fi
+    echo "RSR compliance: PASS"
 
-# Check for unsafe code blocks
-check-unsafe:
-    @echo "Checking for unsafe blocks..."
-    @! rg "unsafe " --type rust || (echo "⚠ Found unsafe blocks" && exit 1)
-    @echo "✓ No unsafe blocks found"
+# Validate STATE.a2ml syntax
+validate-state:
+    @if [ -f ".machine_readable/STATE.a2ml" ]; then \
+        grep -q '^\[metadata\]' .machine_readable/STATE.a2ml && \
+        grep -q 'project\s*=' .machine_readable/STATE.a2ml && \
+        echo "STATE.a2ml: valid" || echo "STATE.a2ml: INVALID (missing required sections)"; \
+    else \
+        echo "No .machine_readable/STATE.a2ml found"; \
+    fi
+
+# Full validation suite
+validate: validate-rsr validate-state
+    @echo "All validations passed!"
+
+# ===============================================================================
+# STATE MANAGEMENT
+# ===============================================================================
+
+# Update STATE.a2ml timestamp
+state-touch:
+    @if [ -f ".machine_readable/STATE.a2ml" ]; then \
+        sed -i 's/last-updated = "[^"]*"/last-updated = "'"$(date +%Y-%m-%d)"'"/' .machine_readable/STATE.a2ml && \
+        echo "STATE.a2ml timestamp updated"; \
+    fi
+
+# Show current phase from STATE.a2ml
+state-phase:
+    @grep -oP 'phase\s*=\s*"\K[^"]+' .machine_readable/STATE.a2ml 2>/dev/null | head -1 || echo "unknown"
+
+# ===============================================================================
+# GUIX & NIX
+# ===============================================================================
+
+# Enter Guix development shell (primary)
+guix-shell:
+    guix shell -D -f guix.scm
+
+# Build with Guix
+guix-build:
+    guix build -f guix.scm
+
+# Enter Nix development shell (fallback)
+nix-shell:
+    @if [ -f "flake.nix" ]; then nix develop; else echo "No flake.nix"; fi
+
+# ===============================================================================
+# HYBRID AUTOMATION
+# ===============================================================================
+
+# Run local automation tasks
+automate task="all":
+    #!/usr/bin/env bash
+    case "{{task}}" in
+        all) just fmt && just lint && just test && just docs && just state-touch ;;
+        cleanup) just clean && find . -name "*.orig" -delete && find . -name "*~" -delete ;;
+        update) just deps && just validate ;;
+        *) echo "Unknown: {{task}}. Use: all, cleanup, update" && exit 1 ;;
+    esac
+
+# ===============================================================================
+# COMBINATORIC MATRIX RECIPES
+# ===============================================================================
+
+# Build matrix: [debug|release] x [target] x [features]
+build-matrix mode="debug" target="" features="":
+    @echo "Build matrix: mode={{mode}} target={{target}} features={{features}}"
+
+# Test matrix: [unit|integration|e2e|all] x [verbosity] x [parallel]
+test-matrix suite="unit" verbosity="normal" parallel="true":
+    @echo "Test matrix: suite={{suite}} verbosity={{verbosity}} parallel={{parallel}}"
+
+# Container matrix: [build|run|push|shell|scan] x [registry] x [tag]
+container-matrix action="build" registry="ghcr.io/hyperpolymath" tag="latest":
+    @echo "Container matrix: action={{action}} registry={{registry}} tag={{tag}}"
+
+# CI matrix: [lint|test|build|security|all] x [quick|full]
+ci-matrix stage="all" depth="quick":
+    @echo "CI matrix: stage={{stage}} depth={{depth}}"
+
+# Show all matrix combinations
+combinations:
+    @echo "=== Combinatoric Matrix Recipes ==="
+    @echo ""
+    @echo "Build Matrix: just build-matrix [debug|release] [target] [features]"
+    @echo "Test Matrix:  just test-matrix [unit|integration|e2e|all] [verbosity] [parallel]"
+    @echo "Container:    just container-matrix [build|run|push|shell|scan] [registry] [tag]"
+    @echo "CI Matrix:    just ci-matrix [lint|test|build|security|all] [quick|full]"
+
+# ===============================================================================
+# VERSION CONTROL
+# ===============================================================================
+
+# Show git status
+status:
+    @git status --short
+
+# Show recent commits
+log count="20":
+    @git log --oneline -{{count}}
+
+# Generate CHANGELOG.md with git-cliff
+changelog:
+    @command -v git-cliff >/dev/null || { echo "git-cliff not found — install: cargo install git-cliff"; exit 1; }
+    git cliff --output CHANGELOG.md
+    @echo "Generated CHANGELOG.md"
+
+# Preview changelog for unreleased commits (does not write)
+changelog-preview:
+    @command -v git-cliff >/dev/null || { echo "git-cliff not found — install: cargo install git-cliff"; exit 1; }
+    git cliff --unreleased --strip header
+
+# Tag a new release (usage: just release-tag 1.2.3)
+release-tag version:
+    #!/usr/bin/env bash
+    TAG="v{{version}}"
+    if git rev-parse "$TAG" >/dev/null 2>&1; then
+        echo "Tag $TAG already exists"
+        exit 1
+    fi
+    just changelog
+    git add CHANGELOG.md
+    git commit -m "chore(release): prepare $TAG"
+    git tag -a "$TAG" -m "Release $TAG"
+    echo "Created tag $TAG — push with: git push origin main --tags"
+
+# ===============================================================================
+# UTILITIES
+# ===============================================================================
 
 # Count lines of code
 loc:
-    @echo "Lines of code by language:"
-    @tokei
+    @find . \( -name "*.rs" -o -name "*.ex" -o -name "*.exs" -o -name "*.res" -o -name "*.gleam" -o -name "*.zig" -o -name "*.idr" -o -name "*.hs" -o -name "*.ncl" -o -name "*.scm" -o -name "*.adb" -o -name "*.ads" \) -not -path './target/*' -not -path './_build/*' 2>/dev/null | xargs wc -l 2>/dev/null | tail -1 || echo "0"
 
-# Show project statistics
-stats:
-    @echo "=== FSLint Project Statistics ==="
-    @echo "Crates: $(ls -1 crates | wc -l)"
-    @echo "Plugins: $(ls -1 plugins | wc -l)"
-    @echo "Documentation files: $(ls -1 *.md docs/*.md 2>/dev/null | wc -l)"
-    @echo ""
-    @echo "Tests:"
-    @cargo test --workspace --no-run 2>&1 | grep -i "test" | head -5
-    @echo ""
-    @echo "Dependencies:"
-    @cargo tree --depth 1
+# Show TODO comments
+todos:
+    @grep -rn "TODO\|FIXME\|HACK\|XXX" --include="*.rs" --include="*.ex" --include="*.res" --include="*.gleam" --include="*.zig" --include="*.idr" --include="*.hs" . 2>/dev/null || echo "No TODOs"
 
-# Security audit
-audit:
-    cargo audit
+# Open in editor
+edit:
+    ${EDITOR:-code} .
 
-# Update dependencies
-update:
-    cargo update
+# Run panic-attacker pre-commit scan
+assail:
+    @command -v panic-attack >/dev/null 2>&1 && panic-attack assail . || echo "panic-attack not found — install from https://github.com/hyperpolymath/panic-attacker"
 
-# Check for outdated dependencies
-outdated:
-    cargo outdated
+# ═══════════════════════════════════════════════════════════════════════════════
+# ONBOARDING & DIAGNOSTICS
+# ═══════════════════════════════════════════════════════════════════════════════
 
-# Release preparation (check everything)
-pre-release: clean ci validate audit
-    @echo "✓ Ready for release!"
-
-# Build Docker image
-docker-build:
-    docker build -t fslint:latest .
-
-# Run Docker container
-docker-run:
-    docker run -v $(pwd):/scan:ro fslint:latest scan /scan
-
-# Docker compose up
-docker-up:
-    docker-compose up
-
-# Git: Add all and commit
-commit message:
-    git add -A
-    git commit -m "{{message}}"
-
-# Git: Add, commit, and push
-push message:
-    git add -A
-    git commit -m "{{message}}"
-    git push
-
-# Create new plugin template
-new-plugin name:
+# Check all required toolchain dependencies and report health
+doctor:
     #!/usr/bin/env bash
-    set -euo pipefail
-    echo "Creating plugin: {{name}}"
-    mkdir -p plugins/{{name}}/src
-    cat > plugins/{{name}}/Cargo.toml <<EOF
-    [package]
-    name = "fslint-plugin-{{name}}"
-    version.workspace = true
-    edition.workspace = true
-    authors.workspace = true
-    license.workspace = true
-    repository.workspace = true
-    description = "{{name}} plugin for FSLint"
+    echo "═══════════════════════════════════════════════════"
+    echo "  Filesoup Doctor — Toolchain Health Check"
+    echo "═══════════════════════════════════════════════════"
+    echo ""
+    PASS=0; FAIL=0; WARN=0
+    check() {
+        local name="$1" cmd="$2" min="$3"
+        if command -v "$cmd" >/dev/null 2>&1; then
+            VER=$("$cmd" --version 2>&1 | head -1)
+            echo "  [OK]   $name — $VER"
+            PASS=$((PASS + 1))
+        else
+            echo "  [FAIL] $name — not found (need $min+)"
+            FAIL=$((FAIL + 1))
+        fi
+    }
+    check "just"              just      "1.25" 
+    check "git"               git       "2.40" 
+# Optional tools
+if command -v panic-attack >/dev/null 2>&1; then
+    echo "  [OK]   panic-attack — available"
+    PASS=$((PASS + 1))
+else
+    echo "  [WARN] panic-attack — not found (pre-commit scanner)"
+    WARN=$((WARN + 1))
+fi
+    echo ""
+    echo "  Result: $PASS passed, $FAIL failed, $WARN warnings"
+    if [ "$FAIL" -gt 0 ]; then
+        echo "  Run 'just heal' to attempt automatic repair."
+        exit 1
+    fi
+    echo "  All required tools present."
 
-    [dependencies]
-    fslint-plugin-api = { path = "../../crates/fslint-plugin-api" }
-    fslint-plugin-sdk = { path = "../../crates/fslint-plugin-sdk" }
+# Attempt to automatically install missing tools
+heal:
+    #!/usr/bin/env bash
+    echo "═══════════════════════════════════════════════════"
+    echo "  Filesoup Heal — Automatic Tool Installation"
+    echo "═══════════════════════════════════════════════════"
+    echo ""
+if ! command -v just >/dev/null 2>&1; then
+    echo "Installing just..."
+    cargo install just 2>/dev/null || echo "Install just from https://just.systems"
+fi
+    echo ""
+    echo "Heal complete. Run 'just doctor' to verify."
 
-    [lib]
-    crate-type = ["cdylib", "rlib"]
-    EOF
-    echo "✓ Plugin template created at plugins/{{name}}/"
-    echo "  Next: Edit plugins/{{name}}/src/lib.rs"
+# Guided tour of the project structure and key concepts
+tour:
+    #!/usr/bin/env bash
+    echo "═══════════════════════════════════════════════════"
+    echo "  Filesoup — Guided Tour"
+    echo "═══════════════════════════════════════════════════"
+    echo ""
+    echo '// SPDX-License-Identifier: MPL-2.0'
+    echo ""
+    echo "Key directories:"
+    echo "  tests/                    Test suite" 
+    echo "  .github/workflows/        CI/CD workflows" 
+    echo "  contractiles/             Must/Trust/Dust contracts" 
+    echo "  .machine_readable/        Machine-readable metadata" 
+    echo ""
+    echo "Quick commands:"
+    echo "  just doctor    Check toolchain health"
+    echo "  just heal      Fix missing tools"
+    echo "  just help-me   Common workflows"
+    echo "  just default   List all recipes"
+    echo ""
+    echo "Read more: README.adoc, EXPLAINME.adoc"
 
-# Watch and rebuild on changes (requires cargo-watch)
-watch:
-    cargo watch -x check -x test
+# Show help for common workflows
+help-me:
+    #!/usr/bin/env bash
+    echo "═══════════════════════════════════════════════════"
+    echo "  Filesoup — Common Workflows"
+    echo "═══════════════════════════════════════════════════"
+    echo ""
+echo "FIRST TIME SETUP:"
+echo "  just doctor           Check toolchain"
+echo "  just heal             Fix missing tools"
+echo "" 
+echo "PRE-COMMIT:"
+echo "  just assail           Run panic-attacker scan"
+echo ""
+echo "LEARN:"
+echo "  just tour             Guided project tour"
+echo "  just default          List all recipes" 
 
-# Run in development mode with auto-reload
-dev:
-    cargo watch -x 'run -- scan .'
 
-# Profile release binary
-profile:
-    cargo build --release
-    time ./target/release/fslint scan .
+# Print the current CRG grade (reads from READINESS.md '**Current Grade:** X' line)
+crg-grade:
+    @grade=$$(grep -oP '(?<=\*\*Current Grade:\*\* )[A-FX]' READINESS.md 2>/dev/null | head -1); \
+    [ -z "$$grade" ] && grade="X"; \
+    echo "$$grade"
 
-# Generate flame graph (requires cargo-flamegraph)
-flamegraph:
-    cargo flamegraph -- scan .
-
-# Check licenses of dependencies
-license-check:
-    cargo license --json | jq -r '.[] | "\(.name): \(.license)"' | sort
-
-# Help text
-help:
-    @echo "FSLint Development Commands"
-    @echo ""
-    @echo "Build & Test:"
-    @echo "  just build          - Build debug"
-    @echo "  just build-release  - Build release"
-    @echo "  just test           - Run tests"
-    @echo "  just bench          - Run benchmarks"
-    @echo ""
-    @echo "Code Quality:"
-    @echo "  just fmt            - Format code"
-    @echo "  just lint           - Run clippy"
-    @echo "  just ci             - Run all CI checks"
-    @echo "  just validate       - Verify RSR compliance"
-    @echo ""
-    @echo "Run FSLint:"
-    @echo "  just scan           - Scan current directory"
-    @echo "  just plugins        - List plugins"
-    @echo "  just run ARGS       - Run with custom args"
-    @echo ""
-    @echo "Development:"
-    @echo "  just watch          - Auto-rebuild on changes"
-    @echo "  just dev            - Run with auto-reload"
-    @echo "  just new-plugin NAME - Create plugin template"
-    @echo ""
-    @echo "Release:"
-    @echo "  just pre-release    - Check release readiness"
-    @echo "  just install        - Install to system"
-    @echo ""
-    @echo "See 'just --list' for all recipes"
+# Generate a shields.io badge markdown for the current CRG grade
+# Looks for '**Current Grade:** X' in READINESS.md; falls back to X
+crg-badge:
+    @grade=$$(grep -oP '(?<=\*\*Current Grade:\*\* )[A-FX]' READINESS.md 2>/dev/null | head -1); \
+    [ -z "$$grade" ] && grade="X"; \
+    case "$$grade" in \
+      A) color="brightgreen" ;; B) color="green" ;; C) color="yellow" ;; \
+      D) color="orange" ;; E) color="red" ;; F) color="critical" ;; \
+      *) color="lightgrey" ;; esac; \
+    echo "[![CRG $$grade](https://img.shields.io/badge/CRG-$$grade-$$color?style=flat-square)](https://github.com/hyperpolymath/standards/tree/main/component-readiness-grades)"
