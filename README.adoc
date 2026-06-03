@@ -1,10 +1,12 @@
+// SPDX-License-Identifier: MPL-2.0
+// Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 = FSLint
 
 *Cross-platform file system intelligence tool with a Notepad++-style plugin architecture*
 
 FSLint provides contextual metadata about files through tiny, composable plugins that can be enabled/disabled individually. Get instant insights about git status, file age, duplicates, AI-generated content, secrets, and more.
 
-[![License: Triple](https://img.shields.io/badge/license-MIT%20%7C%20Apache--2.0%20%7C%20Palimpsest-blue.svg)](LICENSE-MIT)
+[![License: Triple](https://img.shields.io/badge/license-MPL--2.0-blue.svg)](LICENSE-MIT)
 [![Rust](https://img.shields.io/badge/rust-1.70%2B-orange.svg)](https://www.rust-lang.org/)
 [![RSR Compliant](https://img.shields.io/badge/RSR-Gold%20Tier-gold.svg)](docs/RSR_COMPLIANCE.md)
 [![TPCF](https://img.shields.io/badge/TPCF-Perimeter%203%20Open-green.svg)](docs/TPCF.md)
