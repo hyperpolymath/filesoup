@@ -1,48 +1,67 @@
+<!--
+SPDX-License-Identifier: MPL-2.0
+SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+-->
+
 # Changelog
 
-All notable changes to this project will be documented in this file.
+All notable changes to `filesoup` will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+This file is generated from conventional commits by the
+[`changelog-reusable.yml`](https://github.com/hyperpolymath/standards/blob/main/.github/workflows/changelog-reusable.yml)
+workflow (`hyperpolymath/standards#206`). Adopt the workflow in this repo's CI to keep this file in sync automatically — see
+[`templates/cliff.toml`](https://github.com/hyperpolymath/standards/blob/main/templates/cliff.toml)
+for the canonical config.
+
+The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/);
+this project aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
 ### Added
-- Initial release of FSLint
-- Plugin architecture with 8 built-in plugins
-- Query engine with powerful filtering
-- Multiple output formats (table, JSON, simple)
-- Smart caching system
-- Cross-platform support (Linux, macOS, Windows)
 
-## [0.1.0] - 2025-11-22
+- feat(crg): add crg-grade and crg-badge justfile recipes
+- feat: add stapeln.toml container definition
+- feat: deploy UX Manifesto infrastructure
+- feat: add CLADE.a2ml — clade taxonomy declaration
+- feat: add Justfile and TOPOLOGY.md (RSR compliance)
+- feat: add RSR template structure and project metadata
+- feat: create filesoup monorepo with fslint plugin API and SDK
 
-### Added
-- Core plugin API and SDK
-- Scanner with directory traversal
-- Configuration system
-- CLI with subcommands: scan, plugins, enable, disable, config, query
-- Git status plugin
-- File age plugin
-- Grouping plugin
-- Version detection plugin
-- OCR status plugin
-- AI detection plugin
-- Duplicate finder plugin
-- Secret scanner plugin
-- CI/CD workflows
-- Comprehensive documentation
-- Example configurations
+### Fixed
 
-### Performance
-- Smart caching by (path, mtime, size)
-- Configurable max-depth limiting
-- .gitignore support for faster scanning
+- fix(ci): pin upload-artifact to valid SHA in hypatia-scan.yml (Refs standards#48) (#14)
+- fix(ci): bump a2ml/k9-validate-action pins to canonical (standards#85) (#12)
+- fix(ci): sync hypatia-scan.yml to canonical (kill cd-scanner build drift) (#11)
+- fix(ci): adopt canonical hypatia-scan.yml (env.HOME/scanner-layout + Comment-step gate) (#9)
+- fix(ci): rsr-antipattern.yml duplicate heredoc (#7)
+- fix(scorecard): enforce granular permissions and add fuzzing placeholder
+- fix: correct email jonathan.jewell → j.d.a.jewell
+- fix: global AGPL-3.0-or-later → PMPL-1.0-or-later replacement
+- fix: SPDX headers (AGPL→PMPL), email, author name
 
-### Security
-- Secret scanner detects exposed API keys
-- AI detection identifies generated content
-- Duplicate finder prevents data redundancy
+### Changed
 
-[Unreleased]: https://github.com/Hyperpolymath/file-soup/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/Hyperpolymath/file-soup/releases/tag/v0.1.0
+- refactor: migrate 6SCM → 6A2 (.scm → .a2ml format)
+
+### Documentation
+
+- docs: substantive CRG C annotation (EXPLAINME.adoc)
+- docs: add EXPLAINME.adoc — prove-it file backing README claims
+- docs: align documentation with FSLint vision and architecture
+
+### CI
+
+- ci: redistribute concurrency-cancel guard to read-only check workflows (#16)
+- ci: bump actions/upload-artifact SHA to current v4 (#6)
+- ci: SHA-pin hyperpolymath validate-actions in dogfood-gate
+- ci: fix workflow-linter YAML parse error + self-flag bug
+- ci(antipattern): fix top-level dir matching + benchmarks/lsp/bench filename allowlists (#5)
+
+## Pre-history
+
+Prior commits to this file's introduction are recorded in git history but not formally classified into Keep-a-Changelog sections. To backfill, run `git cliff -o CHANGELOG.md` locally using the canonical [`cliff.toml`](https://github.com/hyperpolymath/standards/blob/main/templates/cliff.toml) — this is one-shot mechanical work.
+
+---
+
+<!-- This file was seeded by the 2026-05-26 estate tech-debt audit follow-up (Row-2 Phase 3); see [`hyperpolymath/standards/docs/audits/2026-05-26-estate-documentation-debt.md`](https://github.com/hyperpolymath/standards/blob/main/docs/audits/2026-05-26-estate-documentation-debt.md). -->

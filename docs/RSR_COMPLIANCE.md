@@ -1,3 +1,7 @@
+<!--
+SPDX-License-Identifier: MPL-2.0
+Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+-->
 # RSR Framework Compliance
 
 FSLint conforms to the **Rhodium Standard Repository (RSR) Framework** at **Gold Tier** level.
@@ -66,7 +70,7 @@ just validate  # Or: make ci && ./scripts/verify-rsr.sh
 - ✅ `README.md` - Comprehensive project documentation
 - ✅ `LICENSE-MIT` - MIT License
 - ✅ `LICENSE-APACHE` - Apache License 2.0
-- ✅ `LICENSE-PALIMPSEST` - Palimpsest License v0.8 (experimental)
+- ✅ `LICENSE-PALIMPSEST` - MPL-2.0 v0.8 (experimental)
 - ✅ `SECURITY.md` - Security policy and reporting
 - ✅ `CONTRIBUTING.md` - Contribution guidelines
 - ✅ `CODE_OF_CONDUCT.md` - Community standards
@@ -171,7 +175,7 @@ $ cargo clippy -- -D warnings  # ✓ No warnings
 **Triple Licensing**:
 - ✅ MIT License (`LICENSE-MIT`)
 - ✅ Apache License 2.0 (`LICENSE-APACHE`)
-- ✅ Palimpsest License v0.8 (`LICENSE-PALIMPSEST`)
+- ✅ MPL-2.0 v0.8 (`LICENSE-PALIMPSEST`)
 
 Users may choose **any** of the three licenses.
 

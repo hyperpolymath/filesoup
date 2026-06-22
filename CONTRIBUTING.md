@@ -1,339 +1,116 @@
-# Contributing to FSLint
+# Clone the repository
+git clone https://github.com/hyperpolymath/filesoup.git
+cd filesoup
 
-Thank you for your interest in contributing to FSLint! This document provides guidelines and instructions for contributing.
+# Using Nix (recommended for reproducibility)
+nix develop
 
-## Table of Contents
+# Or using toolbox/distrobox
+toolbox create filesoup-dev
+toolbox enter filesoup-dev
+# Install dependencies manually
 
-- [Code of Conduct](#code-of-conduct)
-- [Getting Started](#getting-started)
-- [Development Setup](#development-setup)
-- [Making Changes](#making-changes)
-- [Testing](#testing)
-- [Pull Request Process](#pull-request-process)
-- [Plugin Development](#plugin-development)
-- [Coding Standards](#coding-standards)
-
-## Code of Conduct
-
-Be respectful, inclusive, and professional. We're all here to make FSLint better.
-
-## Getting Started
-
-1. Fork the repository
-2. Clone your fork:
-   ```bash
-   git clone https://github.com/YOUR_USERNAME/file-soup.git
-   cd file-soup
-   ```
-3. Add upstream remote:
-   ```bash
-   git remote add upstream https://github.com/Hyperpolymath/file-soup.git
-   ```
-
-## Development Setup
-
-### Prerequisites
-
-- Rust 1.70 or later
-- Git 2.0 or later
-- Cargo
-
-### Building
-
-```bash
-# Build all crates
-cargo build --workspace
-
-# Build release
-cargo build --release
-
-# Run tests
-cargo test --workspace
-
-# Run clippy
-cargo clippy --workspace -- -D warnings
-
-# Format code
-cargo fmt --all
+# Verify setup
+just check   # or: cargo check / mix compile / etc.
+just test    # Run test suite
 ```
 
-### Running Locally
-
-```bash
-# Run from source
-cargo run -- scan .
-
-# Or build and use binary
-cargo build --release
-./target/release/fslint scan .
+### Repository Structure
+```
+filesoup/
+├── src/                 # Source code (Perimeter 1-2)
+├── lib/                 # Library code (Perimeter 1-2)
+├── extensions/          # Extensions (Perimeter 2)
+├── plugins/             # Plugins (Perimeter 2)
+├── tools/               # Tooling (Perimeter 2)
+├── docs/                # Documentation (Perimeter 3)
+│   ├── architecture/    # ADRs, specs (Perimeter 2)
+│   └── proposals/       # RFCs (Perimeter 3)
+├── examples/            # Examples (Perimeter 3)
+├── spec/                # Spec tests (Perimeter 3)
+├── tests/               # Test suite (Perimeter 2-3)
+├── .well-known/         # Protocol files (Perimeter 1-3)
+├── .github/             # GitHub config (Perimeter 1)
+│   ├── ISSUE_TEMPLATE/
+│   └── workflows/
+├── CHANGELOG.md
+├── CODE_OF_CONDUCT.md
+├── CONTRIBUTING.md      # This file
+├── GOVERNANCE.md
+├── LICENSE
+├── MAINTAINERS.md
+├── README.adoc
+├── SECURITY.md
+├── flake.nix            # Nix flake (Perimeter 1)
+└── Justfile             # Task runner (Perimeter 1)
 ```
 
-## Making Changes
+---
+
+## How to Contribute
+
+### Reporting Bugs
+
+**Before reporting**:
+1. Search existing issues
+2. Check if it's already fixed in `main`
+3. Determine which perimeter the bug affects
+
+**When reporting**:
+
+Use the [bug report template](.github/ISSUE_TEMPLATE/bug_report.md) and include:
+
+- Clear, descriptive title
+- Environment details (OS, versions, toolchain)
+- Steps to reproduce
+- Expected vs actual behaviour
+- Logs, screenshots, or minimal reproduction
+
+### Suggesting Features
+
+**Before suggesting**:
+1. Check the [roadmap](ROADMAP.md) if available
+2. Search existing issues and discussions
+3. Consider which perimeter the feature belongs to
+
+**When suggesting**:
+
+Use the [feature request template](.github/ISSUE_TEMPLATE/feature_request.md) and include:
+
+- Problem statement (what pain point does this solve?)
+- Proposed solution
+- Alternatives considered
+- Which perimeter this affects
+
+### Your First Contribution
+
+Look for issues labelled:
+
+- [`good first issue`](https://github.com/hyperpolymath/filesoup/labels/good%20first%20issue) — Simple Perimeter 3 tasks
+- [`help wanted`](https://github.com/hyperpolymath/filesoup/labels/help%20wanted) — Community help needed
+- [`documentation`](https://github.com/hyperpolymath/filesoup/labels/documentation) — Docs improvements
+- [`perimeter-3`](https://github.com/hyperpolymath/filesoup/labels/perimeter-3) — Community sandbox scope
+
+---
+
+## Development Workflow
 
 ### Branch Naming
-
-- Features: `feat/description`
-- Bugs: `fix/description`
-- Documentation: `docs/description`
-- Refactoring: `refactor/description`
-
-Example:
-```bash
-git checkout -b feat/add-malware-scanner
+```
+docs/short-description       # Documentation (P3)
+test/what-added              # Test additions (P3)
+feat/short-description       # New features (P2)
+fix/issue-number-description # Bug fixes (P2)
+refactor/what-changed        # Code improvements (P2)
+security/what-fixed          # Security fixes (P1-2)
 ```
 
 ### Commit Messages
 
-Follow conventional commits:
-
-- `feat: Add new feature`
-- `fix: Fix bug`
-- `docs: Update documentation`
-- `test: Add tests`
-- `refactor: Refactor code`
-- `perf: Performance improvement`
-- `chore: Maintenance task`
-
-Example:
-```bash
-git commit -m "feat: Add malware scanner plugin"
+We follow [Conventional Commits](https://www.conventionalcommits.org/):
 ```
+<type>(<scope>): <description>
 
-## Testing
+[optional body]
 
-### Running Tests
-
-```bash
-# All tests
-cargo test --workspace
-
-# Specific crate
-cargo test -p fslint-core
-
-# With output
-cargo test -- --nocapture
-
-# Integration tests only
-cargo test --test '*'
-```
-
-### Writing Tests
-
-```rust
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_feature() {
-        // Arrange
-        let input = "test";
-
-        // Act
-        let result = function(input);
-
-        // Assert
-        assert_eq!(result, expected);
-    }
-}
-```
-
-## Pull Request Process
-
-1. **Update from upstream**:
-   ```bash
-   git fetch upstream
-   git rebase upstream/main
-   ```
-
-2. **Make your changes** following coding standards
-
-3. **Add tests** for new functionality
-
-4. **Run checks**:
-   ```bash
-   cargo fmt --all
-   cargo clippy --workspace -- -D warnings
-   cargo test --workspace
-   ```
-
-5. **Push to your fork**:
-   ```bash
-   git push origin feat/your-feature
-   ```
-
-6. **Create Pull Request**:
-   - Provide clear description
-   - Reference related issues
-   - Include screenshots if UI changes
-   - Ensure CI passes
-
-7. **Code Review**:
-   - Address feedback
-   - Update PR as needed
-
-## Plugin Development
-
-### Creating a New Plugin
-
-1. **Create plugin directory**:
-   ```bash
-   mkdir -p plugins/my-plugin/src
-   ```
-
-2. **Add Cargo.toml**:
-   ```toml
-   [package]
-   name = "fslint-plugin-my-plugin"
-   version.workspace = true
-   edition.workspace = true
-
-   [dependencies]
-   fslint-plugin-api = { path = "../../crates/fslint-plugin-api" }
-   fslint-plugin-sdk = { path = "../../crates/fslint-plugin-sdk" }
-
-   [lib]
-   crate-type = ["cdylib", "rlib"]
-   ```
-
-3. **Implement Plugin trait** in `src/lib.rs`:
-   ```rust
-   use fslint_plugin_api::*;
-
-   pub struct MyPlugin;
-
-   impl Plugin for MyPlugin {
-       fn metadata() -> PluginMetadata {
-           PluginMetadata {
-               name: "my-plugin".into(),
-               version: "0.1.0".into(),
-               description: "My awesome plugin".into(),
-               author: Some("Your Name".into()),
-               enabled_by_default: false,
-           }
-       }
-
-       fn check(&self, context: &PluginContext) -> Result<PluginResult, PluginError> {
-           // Your logic here
-           Ok(PluginResult::active("my-plugin", "Found something!"))
-       }
-   }
-   ```
-
-4. **Register plugin** in `crates/fslint-cli/src/commands.rs`:
-   ```rust
-   loader.register(
-       my_plugin::MyPlugin::new(),
-       my_plugin::MyPlugin::metadata()
-   );
-   ```
-
-5. **Add to workspace** in root `Cargo.toml`:
-   ```toml
-   members = [
-       # ... existing members
-       "plugins/my-plugin",
-   ]
-   ```
-
-6. **Add tests**:
-   ```rust
-   #[cfg(test)]
-   mod tests {
-       use super::*;
-
-       #[test]
-       fn test_plugin_metadata() {
-           let metadata = MyPlugin::metadata();
-           assert_eq!(metadata.name, "my-plugin");
-       }
-   }
-   ```
-
-### Plugin Best Practices
-
-- **Single Responsibility**: One plugin = one feature
-- **Performance**: Minimize expensive operations
-- **Error Handling**: Use `PluginError` appropriately
-- **Documentation**: Add clear docstrings
-- **Configuration**: Support plugin-specific config
-- **Testing**: Add comprehensive tests
-
-## Coding Standards
-
-### Rust Style
-
-- Follow [Rust API Guidelines](https://rust-lang.github.io/api-guidelines/)
-- Use `rustfmt` for formatting
-- Use `clippy` for linting
-- Write documentation comments for public APIs
-
-### Code Quality
-
-- **No panics**: Use `Result` and `Option`
-- **Error handling**: Provide context with `anyhow::Context`
-- **Type safety**: Leverage Rust's type system
-- **Documentation**: Document public APIs
-- **Tests**: Cover edge cases
-
-### Performance
-
-- Avoid unnecessary allocations
-- Use efficient data structures
-- Profile before optimizing
-- Consider caching for expensive operations
-
-### Security
-
-- Validate all inputs
-- Avoid command injection
-- Handle sensitive data carefully
-- Follow security best practices
-
-## Documentation
-
-### Code Comments
-
-```rust
-/// Calculates the hash of a file
-///
-/// # Arguments
-/// * `path` - Path to the file
-///
-/// # Returns
-/// * `Ok(String)` - SHA-256 hash as hex string
-/// * `Err(String)` - Error message
-pub fn calculate_hash(path: &Path) -> Result<String, String> {
-    // Implementation
-}
-```
-
-### README Updates
-
-Update README.md when:
-- Adding new features
-- Changing CLI interface
-- Adding new plugins
-- Updating configuration format
-
-## Release Process
-
-1. Update version in `Cargo.toml`
-2. Update CHANGELOG.md
-3. Create git tag: `git tag -a v0.2.0 -m "Release v0.2.0"`
-4. Push tag: `git push --tags`
-5. CI will build and create release
-
-## Questions?
-
-- Open an issue for bug reports
-- Start a discussion for feature requests
-- Join our community chat (coming soon)
-
-## License
-
-By contributing, you agree that your contributions will be dual-licensed under MIT and Apache-2.0.
-
----
-
-Thank you for contributing to FSLint! 🎉
+[optional footer]

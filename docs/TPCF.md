@@ -1,3 +1,7 @@
+<!--
+SPDX-License-Identifier: MPL-2.0
+Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+-->
 # Tri-Perimeter Contribution Framework (TPCF)
 
 FSLint uses the **Tri-Perimeter Contribution Framework** for graduated access control and trust management.
