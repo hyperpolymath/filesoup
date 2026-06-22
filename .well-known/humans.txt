@@ -1,76 +1,14 @@
-# humanstxt.org/
-# The humans responsible for FSLint
+# SPDX-License-Identifier: MPL-2.0
+# humanstxt.org
 
 /* TEAM */
-Project: FSLint
-Site: https://github.com/Hyperpolymath/file-soup
-Standards: RSR Framework, TPCF, RFC 9116
-Location: Distributed
-
-/* THANKS */
-Built with love for the Rust community
-Inspired by Notepad++ plugin architecture
-Thanks to Claude AI for development assistance
-Thanks to open source maintainers everywhere
+Maintainer: Jonathan D.A. Jewell (hyperpolymath)
+Contact: j.d.a.jewell@open.ac.uk
+From: United Kingdom
 
 /* SITE */
-Last update: 2025-11-22
-Language: English
-Doctype: Markdown, TOML, Rust
-IDE: Neovim, VS Code, Emacs, Whatever works!
-Components: Rust, Cargo, GitHub Actions, Docker
-
-/* TECHNOLOGY */
-- Rust 1.70+: Memory safety, performance
-- Cargo: Build system, dependency management
-- git2: Git repository integration
-- walkdir: Directory traversal
-- serde: Serialization
-- clap: CLI parsing
-- criterion: Benchmarking
-
-/* ATTRIBUTION */
-FSLint © 2025 FSLint Contributors
-License: MIT OR Apache-2.0
-
-Key Contributors:
-- Claude AI (Initial development)
-- FSLint Community (Ongoing)
-
-Built during a marathon coding session to maximize
-Claude credits before expiration. May contain bugs,
-definitely contains ambition! 🚀
-
-/* PHILOSOPHY */
-Tiny plugins that can be added incrementally,
-not monolithic features.
-
-Each plugin should:
-- Do one thing well
-- Be independently enable/disable-able
-- Have minimal performance impact when disabled
-- Fail gracefully
-- Provide clear, actionable information
-
-/* STANDARDS COMPLIANCE */
-- RFC 9116: security.txt
-- RSR Framework: Rhodium Standard Repository
-- TPCF: Tri-Perimeter Contribution Framework
-- Contributor Covenant v2.1
-- WCAG 2.1 AA (documentation)
-- Semantic Versioning 2.0.0
-
-/* CONTACT */
-Email: maintainers@fslint.org
-Security: security@fslint.org
-GitHub: https://github.com/Hyperpolymath/file-soup
-Issues: https://github.com/Hyperpolymath/file-soup/issues
-
-/* ASCII ART */
-     _____ ____  _     _       _
-    |  ___/ ___|| |   (_)_ __ | |_
-    | |_  \___ \| |   | | '_ \| __|
-    |  _|  ___) | |___| | | | | |_
-    |_|   |____/|_____|_|_| |_|\__|
-
-    File System Intelligence Tool
+Last update: 2026-03-28
+Standards: RSR (Rhodium Standard Repository)
+License: MPL-2.0 (Palimpsest MPL)
+Components: Idris2 ABI, Zig FFI
+Tools: just, Podman, Guix

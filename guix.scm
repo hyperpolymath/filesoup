@@ -1,25 +1,18 @@
-;; file-soup - Guix Package Definition
-;; Run: guix shell -D -f guix.scm
+; SPDX-License-Identifier: MPL-2.0
+;; guix.scm — GNU Guix package definition for filesoup
+;; Usage: guix shell -f guix.scm
 
 (use-modules (guix packages)
-             (guix gexp)
-             (guix git-download)
-             (guix build-system cargo)
-             ((guix licenses) #:prefix license:)
-             (gnu packages base))
+             (guix build-system gnu)
+             (guix licenses))
 
-(define-public file_soup
-  (package
-    (name "file-soup")
-    (version "0.1.0")
-    (source (local-file "." "file-soup-checkout"
-                        #:recursive? #t
-                        #:select? (git-predicate ".")))
-    (build-system cargo-build-system)
-    (synopsis "Rust application")
-    (description "Rust application - part of the RSR ecosystem.")
-    (home-page "https://github.com/hyperpolymath/file-soup")
-    (license (list license:expat license:agpl3+))))
-
-;; Return package for guix shell
-file_soup
+(package
+  (name "filesoup")
+  (version "0.1.0")
+  (source #f)
+  (build-system gnu-build-system)
+  (synopsis "filesoup")
+  (description "filesoup — part of the hyperpolymath ecosystem.")
+  (home-page "https://github.com/hyperpolymath/filesoup")
+  (license ((@@ (guix licenses) license) "MPL-2.0"
+             "https://github.com/hyperpolymath/palimpsest-license")))

@@ -19,7 +19,7 @@ members = [
 version = "0.1.0"
 edition = "2021"
 authors = ["FSLint Contributors"]
-license = "MIT OR AGPL-3.0-or-later"
+license = "MPL-2.0"
 repository = "https://github.com/Hyperpolymath/file-soup"
 
 [workspace.dependencies]
@@ -55,7 +55,6 @@ sha2 = "0.11"
 hex = "0.4"
 
 # Image metadata
-image = "0.25"
 kamadak-exif = "0.6"
 
 # PDF operations

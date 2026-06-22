@@ -1,37 +1,9 @@
-# Canonical: https://github.com/Hyperpolymath/file-soup/.well-known/security.txt
-# Expires: 2026-11-22T00:00:00.000Z
+# SPDX-License-Identifier: MPL-2.0
+# RFC 9116 - security.txt
+# https://securitytxt.org/
 
-Contact: mailto:security@fslint.org
-Contact: https://github.com/Hyperpolymath/file-soup/security/advisories/new
+Contact: mailto:j.d.a.jewell@open.ac.uk
+Expires: 2027-12-31T23:59:59.000Z
 Preferred-Languages: en
-Canonical: https://fslint.org/.well-known/security.txt
-Policy: https://github.com/Hyperpolymath/file-soup/blob/main/SECURITY.md
-Acknowledgments: https://github.com/Hyperpolymath/file-soup/blob/main/SECURITY.md#security-hall-of-fame
-
-# Encryption: https://keys.openpgp.org/vks/v1/by-fingerprint/[FINGERPRINT]
-
-# Please report security vulnerabilities responsibly.
-# DO NOT create public GitHub issues for vulnerabilities.
-#
-# Expected response time:
-# - Acknowledgment: 48 hours
-# - Triage: 7 days
-# - Fix: 90 days (coordinated disclosure)
-#
-# Supported versions:
-# - 0.1.x: Fully supported
-#
-# Out of scope:
-# - Social engineering attacks
-# - Physical security
-# - Denial of service (intentional resource exhaustion)
-# - Issues in third-party dependencies (report to upstream)
-#
-# In scope:
-# - Code execution vulnerabilities
-# - Path traversal attacks
-# - Data leakage
-# - Authentication bypass
-# - Privilege escalation
-#
-# This security.txt file complies with RFC 9116.
+Canonical: https://github.com/hyperpolymath/filesoup/.well-known/security.txt
+Policy: https://github.com/hyperpolymath/filesoup/blob/main/SECURITY.md

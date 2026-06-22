@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MPL-2.0
+// Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 use colored::*;
 use fslint_core::ScannedFile;
 use fslint_plugin_api::{PluginResult, PluginStatus};
