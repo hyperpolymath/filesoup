@@ -4,7 +4,7 @@
 ;;; Purpose: Preserve AI conversation context across sessions
 ;;; Reference: https://github.com/hyperpolymath/state.scm
 
-;; SPDX-License-Identifier: MIT OR AGPL-3.0-or-later
+;; SPDX-License-Identifier: MPL-2.0 OR AGPL-3.0-or-later
 ;; SPDX-FileCopyrightText: 2025 Jonathan D.A. Jewell
 
 ;;;============================================================================
