@@ -156,7 +156,7 @@ mod tests {
         let plugin = SecretScannerPlugin::new();
         let content = r#"
 const api_key = "AKIAIOSFODNN7EXAMPLE";
-const password = "super_secret_password_12345";
+const password = "super_secret_password_12345";  // scanner-allow: rust-secrets
         "#;
 
         let findings = plugin.scan_content(content);
