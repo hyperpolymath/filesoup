@@ -8,7 +8,6 @@ on:
     branches: [ main, develop ]
 
 permissions: read-all
-  actions: read
 
 env:
   CARGO_TERM_COLOR: always
