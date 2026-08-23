@@ -106,18 +106,18 @@ Contact: https://github.com/Hyperpolymath/file-soup/security/advisories/new
 - ✅ `Cargo.toml` - Rust workspace configuration
 - ✅ `justfile` - Just command runner (20+ recipes)
 - ✅ `Makefile` - Traditional make support
-- ✅ `flake.nix` - Nix reproducible builds
+- ✅ `flake.guix` - Guix reproducible builds
 - ✅ `.github/workflows/ci.yml` - CI/CD automation
 
 **Reproducible Builds**:
 - ✅ `Cargo.lock` committed
-- ✅ Nix flake for deterministic builds
+- ✅ Guix flake for deterministic builds
 - ✅ Pinned dependencies
 
 **Evidence**:
 ```bash
 $ just --list  # Lists 40+ development commands
-$ nix build    # Reproducible Nix build
+$ guix build    # Reproducible Guix build
 $ make ci      # Traditional make interface
 ```
 
@@ -189,7 +189,7 @@ Users may choose **any** of the three licenses.
 - ✅ Cargo: `cargo install fslint`
 - ✅ Source: `git clone && cargo build`
 - ✅ Docker: `docker pull fslint/fslint`
-- ✅ Nix: `nix build`
+- ✅ Guix: `guix build`
 
 **Scripts**:
 - ✅ `scripts/install.sh` (Unix)
@@ -285,7 +285,7 @@ just pre-release  # Runs: clean, ci, validate, audit
 - **Quality Assurance**: Rigorous standards
 - **Security**: RFC 9116, SECURITY.md, audit trail
 - **Transparency**: Complete documentation
-- **Reproducibility**: Nix builds, pinned deps
+- **Reproducibility**: Guix builds, pinned deps
 
 ### For Contributors
 
@@ -307,7 +307,7 @@ While FSLint is Gold Tier, we continue to improve:
 
 - **WASM Plugins**: Sandboxed execution
 - **Formal Verification**: SPARK-style proofs
-- **Multi-Language**: Ada/Haskell/ReScript plugins
+- **Multi-Language**: Ada/Haskell/AffineScript plugins
 - **Shell Integration**: OS-native extensions
 
 ## Resources
