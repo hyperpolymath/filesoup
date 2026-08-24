@@ -108,7 +108,7 @@ but no detection logic is wired yet.
 | `file-soup/examples/` | Code examples for plugin authors
 | `PROOF-NEEDS.md` | Formal verification backlog for this repo
 | `Justfile` | Build recipes: `just build`, `just test`, `just fuzz`, `just lint`
-| `flake.nix` / `guix.scm` | Reproducible environment definitions
+| `flake.guix` / `guix.scm` | Reproducible environment definitions
 | `contractiles/` | Contractile trust/dust/intend check files
 | `.machine_readable/` | A2ML state, meta, ecosystem, agentic manifests
 |===
