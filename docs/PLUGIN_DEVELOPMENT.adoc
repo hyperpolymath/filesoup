@@ -1,51 +1,51 @@
-<!--
-SPDX-License-Identifier: CC-BY-SA-4.0
-Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
--->
-# Plugin Development Guide
+== Plugin Development Guide
 
 This guide walks you through creating custom plugins for FSLint.
 
-## Table of Contents
+=== Table of Contents
 
-- [Plugin Architecture](#plugin-architecture)
-- [Creating Your First Plugin](#creating-your-first-plugin)
-- [Plugin API Reference](#plugin-api-reference)
-- [Advanced Features](#advanced-features)
-- [Testing Plugins](#testing-plugins)
-- [Best Practices](#best-practices)
-- [Examples](#examples)
+* link:#plugin-architecture[Plugin Architecture]
+* link:#creating-your-first-plugin[Creating Your First Plugin]
+* link:#plugin-api-reference[Plugin API Reference]
+* link:#advanced-features[Advanced Features]
+* link:#testing-plugins[Testing Plugins]
+* link:#best-practices[Best Practices]
+* link:#examples[Examples]
 
-## Plugin Architecture
+=== Plugin Architecture
 
-FSLint uses a trait-based plugin system where each plugin implements the `Plugin` trait from `fslint-plugin-api`.
+FSLint uses a trait-based plugin system where each plugin implements the
+`+Plugin+` trait from `+fslint-plugin-api+`.
 
-### Plugin Lifecycle
+==== Plugin Lifecycle
 
-1. **Registration**: Plugin registered with `PluginLoader`
-2. **Initialization**: `initialize()` called with configuration
-3. **Execution**: `check()` called for each file
-4. **Cleanup**: `cleanup()` called when disabled
+[arabic]
+. *Registration*: Plugin registered with `+PluginLoader+`
+. *Initialization*: `+initialize()+` called with configuration
+. *Execution*: `+check()+` called for each file
+. *Cleanup*: `+cleanup()+` called when disabled
 
-### Core Components
+==== Core Components
 
-- **PluginContext**: Input data (file path, metadata, working directory)
-- **PluginResult**: Output data (status, message, color, tags)
-- **PluginMetadata**: Plugin information (name, version, description)
-- **PluginError**: Error types for plugin failures
+* *PluginContext*: Input data (file path, metadata, working directory)
+* *PluginResult*: Output data (status, message, color, tags)
+* *PluginMetadata*: Plugin information (name, version, description)
+* *PluginError*: Error types for plugin failures
 
-## Creating Your First Plugin
+=== Creating Your First Plugin
 
-### Step 1: Create Plugin Structure
+==== Step 1: Create Plugin Structure
 
-```bash
+[source,bash]
+----
 mkdir -p plugins/hello-world/src
 cd plugins/hello-world
-```
+----
 
-### Step 2: Create Cargo.toml
+==== Step 2: Create Cargo.toml
 
-```toml
+[source,toml]
+----
 [package]
 name = "fslint-plugin-hello-world"
 version = "0.1.0"
@@ -57,13 +57,14 @@ fslint-plugin-sdk = { path = "../../crates/fslint-plugin-sdk" }
 
 [lib]
 crate-type = ["cdylib", "rlib"]
-```
+----
 
-### Step 3: Implement Plugin
+==== Step 3: Implement Plugin
 
-Create `src/lib.rs`:
+Create `+src/lib.rs+`:
 
-```rust
+[source,rust]
+----
 use fslint_plugin_api::{Plugin, PluginContext, PluginError, PluginMetadata, PluginResult};
 use fslint_plugin_sdk::path;
 use std::collections::HashMap;
@@ -135,38 +136,42 @@ mod tests {
         assert_eq!(result.status, fslint_plugin_api::PluginStatus::Active);
     }
 }
-```
+----
 
-### Step 4: Register Plugin
+==== Step 4: Register Plugin
 
-Add to root `Cargo.toml`:
+Add to root `+Cargo.toml+`:
 
-```toml
+[source,toml]
+----
 members = [
     # ... existing members
     "plugins/hello-world",
 ]
-```
+----
 
-Add dependency to `crates/fslint-cli/Cargo.toml`:
+Add dependency to `+crates/fslint-cli/Cargo.toml+`:
 
-```toml
+[source,toml]
+----
 [dependencies]
 fslint-plugin-hello-world = { path = "../../plugins/hello-world" }
-```
+----
 
-Register in `crates/fslint-cli/src/commands.rs`:
+Register in `+crates/fslint-cli/src/commands.rs+`:
 
-```rust
+[source,rust]
+----
 loader.register(
     fslint_plugin_hello_world::HelloWorldPlugin::new(),
     fslint_plugin_hello_world::HelloWorldPlugin::metadata()
 );
-```
+----
 
-### Step 5: Build and Test
+==== Step 5: Build and Test
 
-```bash
+[source,bash]
+----
 # Build the plugin
 cargo build -p fslint-plugin-hello-world
 
@@ -176,24 +181,26 @@ cargo test -p fslint-plugin-hello-world
 # Try it out
 cargo run -- enable hello-world
 cargo run -- scan .
-```
+----
 
-## Plugin API Reference
+=== Plugin API Reference
 
-### PluginContext
+==== PluginContext
 
-```rust
+[source,rust]
+----
 pub struct PluginContext {
     pub path: PathBuf,              // File path
     pub metadata: std::fs::Metadata, // File metadata
     pub working_dir: PathBuf,        // Working directory
     pub shared_context: HashMap<String, String>, // Shared data
 }
-```
+----
 
-### PluginResult
+==== PluginResult
 
-```rust
+[source,rust]
+----
 pub struct PluginResult {
     pub plugin_name: String,
     pub status: PluginStatus,
@@ -202,20 +209,21 @@ pub struct PluginResult {
     pub tags: Vec<String>,
     pub metadata: HashMap<String, String>,
 }
-```
+----
 
-#### PluginStatus Variants
+===== PluginStatus Variants
 
-- `Active`: Plugin found something noteworthy
-- `Inactive`: Plugin not applicable
-- `Alert`: Warning level finding
-- `Warning`: Important issue found
-- `Error`: Critical issue found
-- `Skipped`: Plugin skipped execution
+* `+Active+`: Plugin found something noteworthy
+* `+Inactive+`: Plugin not applicable
+* `+Alert+`: Warning level finding
+* `+Warning+`: Important issue found
+* `+Error+`: Critical issue found
+* `+Skipped+`: Plugin skipped execution
 
-#### Builder Methods
+===== Builder Methods
 
-```rust
+[source,rust]
+----
 // Create active result
 PluginResult::active("plugin-name", "message")
 
@@ -236,11 +244,12 @@ result.with_tags(vec!["tag1".into(), "tag2".into()])
 
 // Add metadata
 result.with_metadata("key", "value")
-```
+----
 
-### PluginError
+==== PluginError
 
-```rust
+[source,rust]
+----
 pub enum PluginError {
     Io(std::io::Error),
     Config(String),
@@ -248,13 +257,14 @@ pub enum PluginError {
     NotApplicable(String),
     ExternalDependency(String),
 }
-```
+----
 
-## Advanced Features
+=== Advanced Features
 
-### Configuration Support
+==== Configuration Support
 
-```rust
+[source,rust]
+----
 impl Plugin for MyPlugin {
     fn initialize(&mut self, config: &HashMap<String, String>) -> Result<(), PluginError> {
         if let Some(threshold) = config.get("threshold") {
@@ -264,17 +274,20 @@ impl Plugin for MyPlugin {
         Ok(())
     }
 }
-```
+----
 
 Config file:
-```toml
+
+[source,toml]
+----
 [plugin_config.my-plugin]
 threshold = "100"
-```
+----
 
-### Cleanup Support
+==== Cleanup Support
 
-```rust
+[source,rust]
+----
 impl Plugin for MyPlugin {
     fn cleanup(&mut self) -> Result<(), PluginError> {
         // Clean up resources
@@ -282,11 +295,12 @@ impl Plugin for MyPlugin {
         Ok(())
     }
 }
-```
+----
 
-### Using SDK Helpers
+==== Using SDK Helpers
 
-```rust
+[source,rust]
+----
 use fslint_plugin_sdk::{path, metadata, patterns};
 
 // Get file extension
@@ -299,11 +313,12 @@ let days = metadata::age_in_days(context.metadata.modified()?);
 if patterns::matches(&context.path, &patterns::Patterns::image_files()) {
     // Handle image file
 }
-```
+----
 
-### Shared Context
+==== Shared Context
 
-```rust
+[source,rust]
+----
 // Set shared context
 context.shared_context.insert("key".to_string(), "value".to_string());
 
@@ -311,13 +326,14 @@ context.shared_context.insert("key".to_string(), "value".to_string());
 if let Some(value) = context.shared_context.get("other-plugin-key") {
     // Use value
 }
-```
+----
 
-## Testing Plugins
+=== Testing Plugins
 
-### Unit Tests
+==== Unit Tests
 
-```rust
+[source,rust]
+----
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -344,13 +360,14 @@ mod tests {
         assert_eq!(result.status, PluginStatus::Active);
     }
 }
-```
+----
 
-### Integration Tests
+==== Integration Tests
 
-Create `tests/integration_test.rs`:
+Create `+tests/integration_test.rs+`:
 
-```rust
+[source,rust]
+----
 use fslint_core::{PluginLoader, Scanner, ScannerConfig};
 use fslint_plugin_my_plugin::MyPlugin;
 
@@ -366,37 +383,43 @@ fn test_plugin_integration() {
     let results = scanner.scan(".").unwrap();
     assert!(!results.is_empty());
 }
-```
+----
 
-## Best Practices
+=== Best Practices
 
-### Performance
+==== Performance
 
-1. **Early Returns**: Skip files that don't match
-   ```rust
-   if !should_process(&context.path) {
-       return Ok(PluginResult::skipped("plugin"));
-   }
-   ```
+[arabic]
+. *Early Returns*: Skip files that don’t match
++
+[source,rust]
+----
+if !should_process(&context.path) {
+    return Ok(PluginResult::skipped("plugin"));
+}
+----
+. *Caching*: Cache expensive computations
++
+[source,rust]
+----
+lazy_static! {
+    static ref CACHE: Mutex<HashMap<PathBuf, Result>> = Mutex::new(HashMap::new());
+}
+----
+. *Limit File Size*: Don’t process huge files
++
+[source,rust]
+----
+const MAX_SIZE: u64 = 10 * 1024 * 1024; // 10MB
+if context.metadata.len() > MAX_SIZE {
+    return Ok(PluginResult::skipped("plugin"));
+}
+----
 
-2. **Caching**: Cache expensive computations
-   ```rust
-   lazy_static! {
-       static ref CACHE: Mutex<HashMap<PathBuf, Result>> = Mutex::new(HashMap::new());
-   }
-   ```
+==== Error Handling
 
-3. **Limit File Size**: Don't process huge files
-   ```rust
-   const MAX_SIZE: u64 = 10 * 1024 * 1024; // 10MB
-   if context.metadata.len() > MAX_SIZE {
-       return Ok(PluginResult::skipped("plugin"));
-   }
-   ```
-
-### Error Handling
-
-```rust
+[source,rust]
+----
 // Good: Provide context
 .map_err(|e| PluginError::Execution(
     format!("Failed to read {}: {}", path.display(), e)
@@ -404,11 +427,12 @@ fn test_plugin_integration() {
 
 // Bad: Generic errors
 .map_err(|e| PluginError::Execution(e.to_string()))?
-```
+----
 
-### Resource Management
+==== Resource Management
 
-```rust
+[source,rust]
+----
 impl Plugin for MyPlugin {
     fn cleanup(&mut self) -> Result<(), PluginError> {
         // Always cleanup resources
@@ -417,39 +441,39 @@ impl Plugin for MyPlugin {
         Ok(())
     }
 }
-```
+----
 
-## Examples
+=== Examples
 
 See existing plugins for complete examples:
 
-- **Simple**: `plugins/file-age/` - Basic plugin with SDK helpers
-- **Pattern Matching**: `plugins/grouping/` - Regex patterns
-- **External Deps**: `plugins/git-status/` - Using git2
-- **Complex Logic**: `plugins/secret-scanner/` - Multiple patterns
-- **Caching**: `plugins/duplicate-finder/` - Global state
+* *Simple*: `+plugins/file-age/+` - Basic plugin with SDK helpers
+* *Pattern Matching*: `+plugins/grouping/+` - Regex patterns
+* *External Deps*: `+plugins/git-status/+` - Using git2
+* *Complex Logic*: `+plugins/secret-scanner/+` - Multiple patterns
+* *Caching*: `+plugins/duplicate-finder/+` - Global state
 
-## Troubleshooting
+=== Troubleshooting
 
-### Plugin Not Loading
+==== Plugin Not Loading
 
-- Check plugin is in workspace `Cargo.toml`
-- Verify registration in `commands.rs`
-- Ensure plugin compiles: `cargo build -p plugin-name`
+* Check plugin is in workspace `+Cargo.toml+`
+* Verify registration in `+commands.rs+`
+* Ensure plugin compiles: `+cargo build -p plugin-name+`
 
-### Plugin Not Executing
+==== Plugin Not Executing
 
-- Check if enabled: `fslint plugins`
-- Enable: `fslint enable plugin-name`
-- Check filter logic in `check()`
+* Check if enabled: `+fslint plugins+`
+* Enable: `+fslint enable plugin-name+`
+* Check filter logic in `+check()+`
 
-### Performance Issues
+==== Performance Issues
 
-- Profile with `cargo flamegraph`
-- Add early returns
-- Implement caching
-- Reduce file operations
+* Profile with `+cargo flamegraph+`
+* Add early returns
+* Implement caching
+* Reduce file operations
 
----
+'''''
 
 Happy plugin development! 🎉
