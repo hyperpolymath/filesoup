@@ -44,7 +44,7 @@ cargo build --release
 
 # Create git tag
 echo -e "${YELLOW}Creating git tag v${VERSION}...${NC}"
-git add Cargo.toml CHANGELOG.adoc
+git add Cargo.toml Cargo.lock CHANGELOG.adoc
 git commit -m "chore: Release v${VERSION}"
 git tag -a "v${VERSION}" -m "Release v${VERSION}"
 
