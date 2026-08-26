@@ -35,7 +35,7 @@ sed -i.bak "s/^version = \".*\"/version = \"${VERSION}\"/" Cargo.toml
 rm Cargo.toml.bak
 
 # Update CHANGELOG
-echo -e "${YELLOW}Update CHANGELOG.md manually, then press Enter to continue...${NC}"
+echo -e "${YELLOW}Update CHANGELOG.adoc manually, then press Enter to continue...${NC}"
 read
 
 # Build release
@@ -44,7 +44,7 @@ cargo build --release
 
 # Create git tag
 echo -e "${YELLOW}Creating git tag v${VERSION}...${NC}"
-git add Cargo.toml CHANGELOG.md
+git add Cargo.toml Cargo.lock CHANGELOG.adoc
 git commit -m "chore: Release v${VERSION}"
 git tag -a "v${VERSION}" -m "Release v${VERSION}"
 
