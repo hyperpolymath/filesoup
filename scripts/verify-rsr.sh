@@ -70,7 +70,7 @@ echo ""
 
 echo "📚 RSR Category 4: Documentation"
 check "README.adoc exists" "[ -f README.adoc ]"
-check "LICENSE files exist (triple licensed)" "[ -f LICENSE-MIT ] && [ -f LICENSE-APACHE ] && [ -f LICENSE-PALIMPSEST ]"
+check "LICENSE files exist (triple licensed)" "[ -f LICENSE-MIT ] && [ -f LICENSE-APACHE ] && [ -f LICENSE ]"
 check "CHANGELOG.adoc exists" "[ -f CHANGELOG.adoc ]"
 check "CONTRIBUTING.adoc exists" "[ -f CONTRIBUTING.adoc ]"
 check "CODE_OF_CONDUCT.adoc exists" "[ -f CODE_OF_CONDUCT.adoc ]"
@@ -115,7 +115,7 @@ warn "No warnings in release build" "cargo build --release --quiet 2>&1 | grep -
 echo ""
 
 echo "⚖️ RSR Category 10: Legal Compliance"
-check "Triple licensing (MIT + Apache + Palimpsest)" "[ -f LICENSE-MIT ] && [ -f LICENSE-APACHE ] && [ -f LICENSE-PALIMPSEST ]"
+check "Triple licensing (MIT + Apache + MPL-2.0)" "[ -f LICENSE-MIT ] && [ -f LICENSE-APACHE ] && [ -f LICENSE ]"
 check "License headers in source files" "head -20 crates/fslint-cli/src/main.rs | grep -q 'Copyright\|License' || true"
 warn "Dependency license audit" "cargo license 2>/dev/null | grep -q 'MIT\|Apache' || true"
 echo ""
