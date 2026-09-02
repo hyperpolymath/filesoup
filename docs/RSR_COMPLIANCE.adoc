@@ -62,8 +62,8 @@ operates on local filesystem only - Works without internet connection
 
 *Required Files* (all present): - ✅ `+README.md+` - Comprehensive
 project documentation - ✅ `+LICENSE-MIT+` - MIT License - ✅
-`+LICENSE-APACHE+` - Apache License 2.0 - ✅ `+LICENSE-PALIMPSEST+` -
-MPL-2.0 v0.8 (experimental) - ✅ `+SECURITY.md+` - Security policy and
+`+LICENSE-APACHE+` - Apache License 2.0 - ✅ `+LICENSE+` -
+MPL-2.0 - ✅ `+SECURITY.md+` - Security policy and
 reporting - ✅ `+CONTRIBUTING.md+` - Contribution guidelines - ✅
 `+CODE_OF_CONDUCT.md+` - Community standards - ✅ `+MAINTAINERS.md+` -
 Project governance - ✅ `+CHANGELOG.md+` - Version history
@@ -159,8 +159,8 @@ $ cargo clippy -- -D warnings  # ✓ No warnings
 ==== 10. Legal Compliance ✅
 
 *Triple Licensing*: - ✅ MIT License (`+LICENSE-MIT+`) - ✅ Apache
-License 2.0 (`+LICENSE-APACHE+`) - ✅ MPL-2.0 v0.8
-(`+LICENSE-PALIMPSEST+`)
+License 2.0 (`+LICENSE-APACHE+`) - ✅ MPL-2.0
+(`+LICENSE+`)
 
 Users may choose *any* of the three licenses.
 
