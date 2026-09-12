@@ -11,7 +11,6 @@ on:
       - '.github/workflows/**'
 
 permissions: read-all
-  actions: read
 
 jobs:
   lint-workflows:
@@ -25,7 +24,7 @@ jobs:
           errors=0
           for f in .github/workflows/*.yml .github/workflows/*.yaml; do
             [ -f "$f" ] || continue
-            if ! head -1 "$f" | grep -q "SPDX-License-Identifier"; then
+            if ! awk '/^---[[:space:]]*$/ { next } /^#/ { print; next } { exit }' \"\$f\" \| grep -q \"^# SPDX-License-Identifier:\"; then
               echo "ERROR: $f missing SPDX header"
               errors=$((errors + 1))
             fi

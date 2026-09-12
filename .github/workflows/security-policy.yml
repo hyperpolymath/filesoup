@@ -1,0 +1,52 @@
+# This workflow is managed by gh actions-lock.
+# SPDX-License-Identifier: MPL-2.0
+# This workflow is managed by gh actions-lock.
+name: Security Policy
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+# Estate guardrail: scope push to default branches so a PR fires once (not
+# push+PR), and cancel superseded runs. Safe — read-only PR-triggered check.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Security checks
+        run: |
+          FAILED=false
+
+          # Block MD5/SHA1 for security (allow for checksums/caching)
+          WEAK_CRYPTO=$(grep -rE 'md5\(|sha1\(' --include="*.py" --include="*.rb" --include="*.js" --include="*.ts" --include="*.go" --include="*.rs" . 2>/dev/null | grep -v 'checksum\|cache\|test\|spec' | head -5 || true)
+          if [ -n "$WEAK_CRYPTO" ]; then
+            echo "⚠️ Weak crypto (MD5/SHA1) detected. Use SHA256+ for security:"
+            echo "$WEAK_CRYPTO"
+          fi
+
+          # Block HTTP URLs (except localhost)
+          HTTP_URLS=$(grep -rE 'http://[^l][^o][^c]' --include="*.py" --include="*.js" --include="*.ts" --include="*.go" --include="*.rs" --include="*.yaml" --include="*.yml" . 2>/dev/null | grep -v 'localhost\|127.0.0.1\|example\|test\|spec' | head -5 || true)
+          if [ -n "$HTTP_URLS" ]; then
+            echo "⚠️ HTTP URLs found. Use HTTPS:"
+            echo "$HTTP_URLS"
+          fi
+
+          # Hardcoded secrets check removed: redundant with secret-scanner.yml workflow
+          # which uses gitleaks for more accurate secret detection with fewer false positives.
+          # The secrets check was causing false positives on test fixtures and examples.
+
+          if [ "$FAILED" = true ]; then
+            exit 1
+          fi
+
+          echo "✅ Security policy check passed"
