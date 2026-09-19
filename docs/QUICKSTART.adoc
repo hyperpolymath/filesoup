@@ -307,7 +307,7 @@ docker-compose run fslint
 
 * Read the link:../README.md[full documentation]
 * Learn about link:PLUGIN_DEVELOPMENT.md[plugin development]
-* Check out link:../CONTRIBUTING.md[contributing guidelines]
+* Check out link:../.github/CONTRIBUTING.md[contributing guidelines]
 * Report issues on
 https://github.com/Hyperpolymath/file-soup/issues[GitHub]
 
