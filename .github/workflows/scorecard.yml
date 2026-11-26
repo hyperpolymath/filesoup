@@ -13,6 +13,7 @@ permissions:
 jobs:
   analysis:
     permissions:
+      actions: read
       contents: read
       security-events: write
       id-token: write
